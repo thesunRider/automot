@@ -1096,7 +1096,7 @@ const uint16_t ZERO_PULSE_PERIOD = 751;
 const uint16_t PERIOD_HIGH_DURATION = 498;
 const uint16_t TX_INTERVAL_CONST = 10002;
 const uint16_t TRIGGER_ERROR = 30;
-const uint16_t NUM_PREAMBLE_BYTES = 15;
+const uint16_t NUM_PREAMBLE_BYTES = 4;
 
 # 110
 const uint16_t ONE_PULSE_TRIGG_ERROR = (TRIGGER_ERROR + ONE_PULSE_PERIOD * 10 / 100);
@@ -1138,9 +1138,9 @@ transmitByte(0x00);
 
 
 
-RC5 = 1;
-_delay((unsigned long)((START_PULSE_PERIOD - PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
 RC5 = 0;
+_delay((unsigned long)((START_PULSE_PERIOD - PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
+RC5 = 1;
 _delay((unsigned long)((PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
 
 transmitByte(len);
@@ -1163,7 +1163,7 @@ transmitByte(data[len]);
 
 
 
-RC5 = 1;
+RC5 = 0;
 
 
 
@@ -1194,7 +1194,7 @@ uint8_t i=7;
 do{
 
 
-RC5 = 1;
+RC5 = 0;
 
 if(_byte & (1<<i)){
 _delay((unsigned long)((ONE_PULSE_PERIOD - PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
@@ -1204,7 +1204,7 @@ _delay((unsigned long)((ZERO_PULSE_PERIOD - PERIOD_HIGH_DURATION)*(4000000/40000
 }
 
 
-RC5 = 0;
+RC5 = 1;
 _delay((unsigned long)((PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
 
 }while(i--);

@@ -313,7 +313,9 @@ ADCON1 equ 09Fh ;#
 	FNCALL	_main,___awtoft
 	FNCALL	_main,___ftge
 	FNCALL	_main,_modifyBit
-	FNCALL	_main,_transmitByte
+	FNCALL	_main,_send
+	FNCALL	_send,_crc8
+	FNCALL	_send,_transmitByte
 	FNCALL	___awtoft,___ftpack
 	FNROOT	_main
 psect	strings,class=STRING,delta=2,noexec
@@ -335,15 +337,6 @@ __stringbase:
 psect	strings
 	global    __end_of__stringtab
 __end_of__stringtab:
-	file	"../lib/TinyRF.h"
-	line	118
-_TX_DELAY_MICROS:
-	retlw	030h
-	retlw	013h
-
-	global __end_of_TX_DELAY_MICROS
-__end_of_TX_DELAY_MICROS:
-psect	strings
 	file	"../lib/TinyRF.h"
 	line	114
 _START_PULSE_MAX_ERROR:
@@ -374,7 +367,7 @@ psect	strings
 	file	"../lib/TinyRF.h"
 	line	94
 _NUM_PREAMBLE_BYTES:
-	retlw	0Fh
+	retlw	04h
 	retlw	0
 
 	global __end_of_NUM_PREAMBLE_BYTES
@@ -426,6 +419,15 @@ _START_PULSE_PERIOD:
 __end_of_START_PULSE_PERIOD:
 psect	strings
 	file	"../lib/TinyRF.h"
+	line	118
+_TX_DELAY_MICROS:
+	retlw	030h
+	retlw	013h
+
+	global __end_of_TX_DELAY_MICROS
+__end_of_TX_DELAY_MICROS:
+psect	strings
+	file	"../lib/TinyRF.h"
 	line	116
 _MIN_TX_INTERVAL_REAL:
 	retlw	098h
@@ -451,6 +453,7 @@ _PERIOD_HIGH_DURATION:
 
 	global __end_of_PERIOD_HIGH_DURATION
 __end_of_PERIOD_HIGH_DURATION:
+	global	_seq
 	global	_RC5
 _RC5	set	0x3D
 	global	_RC1
@@ -517,6 +520,7 @@ __pcstackCOMMON:
 psect	cstackBANK0,class=BANK0,space=1,noexec
 global __pcstackBANK0
 __pcstackBANK0:
+?_crc8:	; 1 bytes @ 0x0
 ?_transmitByte:	; 1 bytes @ 0x0
 ??_transmitByte:	; 1 bytes @ 0x0
 	global	?_modifyBit
@@ -524,6 +528,8 @@ __pcstackBANK0:
 ?_main:	; 2 bytes @ 0x0
 	global	?___ftpack
 ?___ftpack:	; 3 bytes @ 0x0
+	global	crc8@len
+crc8@len:	; 1 bytes @ 0x0
 	global	modifyBit@n
 modifyBit@n:	; 2 bytes @ 0x0
 	global	___ftpack@arg
@@ -531,36 +537,64 @@ ___ftpack@arg:	; 3 bytes @ 0x0
 	ds	1
 	global	transmitByte@_byte
 transmitByte@_byte:	; 1 bytes @ 0x1
+	global	crc8@seq
+crc8@seq:	; 1 bytes @ 0x1
 	ds	1
+??_crc8:	; 1 bytes @ 0x2
 	global	transmitByte@i
 transmitByte@i:	; 1 bytes @ 0x2
 	global	modifyBit@p
 modifyBit@p:	; 2 bytes @ 0x2
 	ds	1
+	global	crc8@sum
+crc8@sum:	; 1 bytes @ 0x3
 	global	___ftpack@exp
 ___ftpack@exp:	; 1 bytes @ 0x3
 	ds	1
+	global	crc8@extract
+crc8@extract:	; 1 bytes @ 0x4
 	global	___ftpack@sign
 ___ftpack@sign:	; 1 bytes @ 0x4
 	global	modifyBit@b
 modifyBit@b:	; 2 bytes @ 0x4
 	ds	1
 ??___ftpack:	; 1 bytes @ 0x5
+	global	crc8@tempI
+crc8@tempI:	; 1 bytes @ 0x5
 	ds	1
 ??_modifyBit:	; 1 bytes @ 0x6
-	ds	2
+	global	crc8@data
+crc8@data:	; 1 bytes @ 0x6
+	ds	1
+	global	crc8@crc
+crc8@crc:	; 1 bytes @ 0x7
+	ds	1
+?_send:	; 1 bytes @ 0x8
 	global	?___awtoft
 ?___awtoft:	; 3 bytes @ 0x8
+	global	send@len
+send@len:	; 1 bytes @ 0x8
 	global	___awtoft@c
 ___awtoft@c:	; 2 bytes @ 0x8
-	ds	3
+	ds	1
+	global	send@incrementSeq
+send@incrementSeq:	; 1 bytes @ 0x9
+	ds	1
+??_send:	; 1 bytes @ 0xA
+	ds	1
+	global	send@errChck
+send@errChck:	; 1 bytes @ 0xB
 	global	___awtoft@sign
 ___awtoft@sign:	; 1 bytes @ 0xB
 	ds	1
 ?___ftge:	; 1 bit 
+	global	send@i
+send@i:	; 1 bytes @ 0xC
 	global	___ftge@ff1
 ___ftge@ff1:	; 3 bytes @ 0xC
 	ds	1
+	global	send@data
+send@data:	; 1 bytes @ 0xD
 	global	modifyBit@mask
 modifyBit@mask:	; 2 bytes @ 0xD
 	ds	2
@@ -595,7 +629,11 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;!
 ;!Pointer List with Targets:
 ;!
-;!    crc8$0	PTR unsigned char  size(1) Largest target is 0
+;!    crc8@data	PTR unsigned char  size(1) Largest target is 1
+;!		 -> main@captured_byte(BANK0[1]), 
+;!
+;!    send@data	PTR unsigned char  size(1) Largest target is 1
+;!		 -> main@captured_byte(BANK0[1]), 
 ;!
 
 
@@ -607,6 +645,7 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;!Critical Paths under _main in BANK0
 ;!
 ;!    _main->___ftge
+;!    _send->_crc8
 ;!    ___ftge->___awtoft
 ;!    ___awtoft->___ftpack
 
@@ -620,15 +659,23 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;! ---------------------------------------------------------------------------------
 ;! (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
 ;! ---------------------------------------------------------------------------------
-;! (0) _main                                                 9     9      0    2874
+;! (0) _main                                                 9     9      0    3657
 ;!                                             18 BANK0      9     9      0
 ;!                           ___awtoft
 ;!                             ___ftge
 ;!                          _modifyBit
+;!                               _send
+;! ---------------------------------------------------------------------------------
+;! (1) _send                                                 6     4      2     848
+;!                                              8 BANK0      6     4      2
+;!                               _crc8
 ;!                       _transmitByte
 ;! ---------------------------------------------------------------------------------
-;! (1) _transmitByte                                         3     3      0      67
+;! (2) _transmitByte                                         3     3      0      67
 ;!                                              0 BANK0      3     3      0
+;! ---------------------------------------------------------------------------------
+;! (2) _crc8                                                 8     6      2     318
+;!                                              0 BANK0      8     6      2
 ;! ---------------------------------------------------------------------------------
 ;! (1) _modifyBit                                           15     9      6     429
 ;!                                              0 BANK0     15     9      6
@@ -655,7 +702,9 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;!   ___ftge
 ;!     ___awtoft (ARG)
 ;!   _modifyBit
-;!   _transmitByte
+;!   _send
+;!     _crc8
+;!     _transmitByte
 ;!
 
 ;! Address spaces:
@@ -690,7 +739,7 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;; Return value:  Size  Location     Type
 ;;                  2   55[None  ] int 
 ;; Registers used:
-;;		wreg, status,2, status,0, btemp+1, pclath, cstack
+;;		wreg, fsr0l, fsr0h, status,2, status,0, btemp+1, pclath, cstack
 ;; Tracked objects:
 ;;		On entry : B00/0
 ;;		On exit  : 100/0
@@ -706,7 +755,7 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;;		___awtoft
 ;;		___ftge
 ;;		_modifyBit
-;;		_transmitByte
+;;		_send
 ;; This function is called by:
 ;;		Startup code after reset
 ;; This function uses a non-reentrant model
@@ -723,10 +772,10 @@ psect	maintext
 _main:	
 ;incstack = 0
 	callstack 6
-; Regs used in _main: [wreg+status,2+status,0+btemp+1+pclath+cstack]
+; Regs used in _main: [wreg-fsr0h+status,2+status,0+btemp+1+pclath+cstack]
 	line	45
 	
-l871:	
+l1035:	
 	clrf	(main@packet_cycle)
 	clrf	(main@packet_cycle+1)
 	line	48
@@ -734,12 +783,12 @@ l871:
 	clrf	(145)^080h	;volatile
 	line	49
 	
-l873:	
+l1037:	
 	movlw	low(03h)
 	movwf	(135)^080h	;volatile
 	line	50
 	
-l875:	
+l1039:	
 	movlw	low(0FFh)
 	bcf	status, 5	;RP0=0, select bank0
 	movwf	(main@captured_byte)
@@ -749,24 +798,24 @@ clrwdt ;#
 psect	maintext
 	line	55
 	
-l877:	
+l1041:	
 	bsf	status, 5	;RP0=1, select bank1
 	bsf	(1035/8)^080h,(1035)&7	;volatile
 	line	56
 	
-l879:	
+l1043:	
 	bsf	(1032/8)^080h,(1032)&7	;volatile
 	line	57
 	
-l881:	
+l1045:	
 	bsf	(1033/8)^080h,(1033)&7	;volatile
 	line	58
 	
-l883:	
+l1047:	
 	bsf	(1034/8)^080h,(1034)&7	;volatile
 	line	63
 	
-l885:	
+l1049:	
 	bcf	status, 5	;RP0=0, select bank0
 	movf	(main@packet_cycle+1),w
 	movwf	(___awtoft@c+1)
@@ -779,37 +828,37 @@ l885:
 	movwf	(___ftge@ff1+1)
 	movf	(2+(?___awtoft)),w
 	movwf	(___ftge@ff1+2)
-	movlw	0xb2
+	movlw	0x21
 	movwf	(___ftge@ff2)
-	movlw	0xd0
+	movlw	0xb
 	movwf	(___ftge@ff2+1)
-	movlw	0x40
+	movlw	0x41
 	movwf	(___ftge@ff2+2)
 	fcall	___ftge
 	btfsc	status,0
-	goto	u461
-	goto	u460
-u461:
-	goto	l889
-u460:
+	goto	u581
+	goto	u580
+u581:
+	goto	l1053
+u580:
 	
-l887:	
+l1051:	
 	movf	((main@packet_cycle)),w
 iorwf	((main@packet_cycle+1)),w
 	btfss	status,2
-	goto	u471
-	goto	u470
-u471:
+	goto	u591
+	goto	u590
+u591:
 	goto	l57
-u470:
+u590:
 	line	64
 	
-l889:	
+l1053:	
 	clrf	(main@i)
 	clrf	(main@i+1)
 	line	65
 	
-l895:	
+l1059:	
 	bcf	status, 5	;RP0=0, select bank0
 	movf	(main@captured_byte),w
 	movwf	(??_main+0)+0
@@ -866,28 +915,39 @@ l895:
 	movf	(0+(?_modifyBit)),w
 	movwf	(main@captured_byte)
 	line	68
-	movf	(main@captured_byte),w
-	fcall	_transmitByte
-	line	69
 	
-l897:	
+l1061:	
+	clrf	(send@len)
+	incf	(send@len),f
+	clrf	(send@incrementSeq)
+	incf	(send@incrementSeq),f
+	movlw	(low(main@captured_byte|((0x0)<<8)))&0ffh
+	fcall	_send
+	line	69
+# 69 "../main.c"
+clrwdt ;# 
+psect	maintext
+	line	70
+	
+l1063:	
 	asmopt push
 asmopt off
-movlw	13
+movlw	7
+	bcf	status, 5	;RP0=0, select bank0
 movwf	((??_main+0)+0+1)
-	movlw	251
+	movlw	95
 movwf	((??_main+0)+0)
-	u497:
+	u617:
 decfsz	((??_main+0)+0),f
-	goto	u497
+	goto	u617
 	decfsz	((??_main+0)+0+1),f
-	goto	u497
+	goto	u617
 	nop2
 asmopt pop
 
 	line	64
 	
-l899:	
+l1065:	
 	movlw	01h
 	bcf	status, 5	;RP0=0, select bank0
 	addwf	(main@i),f
@@ -896,47 +956,47 @@ l899:
 	movlw	0
 	addwf	(main@i+1),f
 	
-l901:	
+l1067:	
 	movf	(main@i+1),w
 	xorlw	80h
 	movwf	btemp+1
 	movlw	(0)^80h
 	subwf	btemp+1,w
 	skipz
-	goto	u485
+	goto	u605
 	movlw	05h
 	subwf	(main@i),w
-u485:
+u605:
 
 	skipc
-	goto	u481
-	goto	u480
-u481:
-	goto	l895
-u480:
-	line	71
+	goto	u601
+	goto	u600
+u601:
+	goto	l1059
+u600:
+	line	72
 	
-l903:	
+l1069:	
 	bcf	status, 5	;RP0=0, select bank0
 	clrf	(main@packet_cycle)
 	clrf	(main@packet_cycle+1)
-	line	72
+	line	73
 	
 l57:	
-	line	74
-# 74 "../main.c"
+	line	75
+# 75 "../main.c"
 sleep ;# 
 psect	maintext
-	line	75
+	line	76
 	
-l905:	
+l1071:	
 	asmopt	push
 	asmopt	off
 	nop
 	asmopt	pop
-	line	77
+	line	78
 	
-l907:	
+l1073:	
 	movlw	01h
 	bcf	status, 5	;RP0=0, select bank0
 	addwf	(main@packet_cycle),f
@@ -944,14 +1004,207 @@ l907:
 	incf	(main@packet_cycle+1),f
 	movlw	0
 	addwf	(main@packet_cycle+1),f
-	goto	l885
+	goto	l1049
 	global	start
 	ljmp	start
 	callstack 0
-	line	79
+	line	80
 GLOBAL	__end_of_main
 	__end_of_main:
 	signat	_main,90
+	global	_send
+
+;; *************** function _send *****************
+;; Defined at:
+;;		line 19 in file "../lib/TinyRF_TX.c"
+;; Parameters:    Size  Location     Type
+;;  data            1    wreg     PTR unsigned char 
+;;		 -> main@captured_byte(1), 
+;;  len             1    8[BANK0 ] unsigned char 
+;;  incrementSeq    1    9[BANK0 ] unsigned char 
+;; Auto vars:     Size  Location     Type
+;;  data            1   13[BANK0 ] PTR unsigned char 
+;;		 -> main@captured_byte(1), 
+;;  i               1   12[BANK0 ] unsigned char 
+;;  errChck         1   11[BANK0 ] unsigned char 
+;; Return value:  Size  Location     Type
+;;                  1    wreg      void 
+;; Registers used:
+;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
+;; Tracked objects:
+;;		On entry : 100/0
+;;		On exit  : 100/0
+;;		Unchanged: 0/0
+;; Data sizes:     COMMON   BANK0
+;;      Params:         0       2
+;;      Locals:         0       3
+;;      Temps:          0       1
+;;      Totals:         0       6
+;;Total ram usage:        6 bytes
+;; Hardware stack levels used: 1
+;; Hardware stack levels required when called: 1
+;; This function calls:
+;;		_crc8
+;;		_transmitByte
+;; This function is called by:
+;;		_main
+;; This function uses a non-reentrant model
+;;
+psect	text1,local,class=CODE,delta=2,merge=1,group=0
+	file	"../lib/TinyRF_TX.c"
+	line	19
+global __ptext1
+__ptext1:	;psect for function _send
+psect	text1
+	file	"../lib/TinyRF_TX.c"
+	line	19
+	
+_send:	
+;incstack = 0
+	callstack 6
+; Regs used in _send: [wreg-fsr0h+status,2+status,0+pclath+cstack]
+	movwf	(send@data)
+	line	25
+	
+l971:	
+	movf	(send@len),w
+	movwf	(crc8@len)
+	movf	(_seq),w
+	movwf	(crc8@seq)
+	movf	(send@data),w
+	fcall	_crc8
+	movwf	(send@errChck)
+	line	34
+	
+l973:	
+	clrf	(send@i)
+	line	35
+	
+l979:	
+	movlw	low(0)
+	fcall	_transmitByte
+	line	34
+	
+l981:	
+	movlw	low(01h)
+	movwf	(??_send+0)+0
+	movf	(??_send+0)+0,w
+	addwf	(send@i),f
+	
+l983:	
+	movlw	low(04h)
+	subwf	(send@i),w
+	skipc
+	goto	u511
+	goto	u510
+u511:
+	goto	l979
+u510:
+	
+l104:	
+	line	40
+	bcf	(61/8),(61)&7	;volatile
+	line	41
+	
+l985:	
+	asmopt push
+asmopt off
+	movlw	214
+movwf	((??_send+0)+0)
+	u627:
+	nop2
+	nop2
+decfsz	(??_send+0)+0,f
+	goto	u627
+	nop
+asmopt pop
+
+	line	42
+	
+l987:	
+	bcf	status, 5	;RP0=0, select bank0
+	bsf	(61/8),(61)&7	;volatile
+	line	43
+	asmopt push
+asmopt off
+	movlw	165
+movwf	((??_send+0)+0)
+	u637:
+decfsz	(??_send+0)+0,f
+	goto	u637
+	nop2
+asmopt pop
+
+	line	45
+	
+l989:	
+	bcf	status, 5	;RP0=0, select bank0
+	movf	(send@len),w
+	fcall	_transmitByte
+	line	49
+	
+l991:	
+	movf	(send@errChck),w
+	fcall	_transmitByte
+	line	54
+	
+l993:	
+	movf	(_seq),w
+	fcall	_transmitByte
+	line	59
+	goto	l997
+	line	60
+	
+l995:	
+	movf	(send@len),w
+	addwf	(send@data),w
+	movwf	(??_send+0)+0
+	movf	0+(??_send+0)+0,w
+	movwf	fsr0
+	bcf	status, 7	;select IRP bank0
+	movf	indf,w
+	fcall	_transmitByte
+	line	59
+	
+l997:	
+	movlw	01h
+	subwf	(send@len),f
+		incf	(((send@len))),w
+	btfss	status,2
+	goto	u521
+	goto	u520
+u521:
+	goto	l995
+u520:
+	
+l107:	
+	line	65
+	bcf	(61/8),(61)&7	;volatile
+	line	69
+	
+l999:	
+	movf	((send@incrementSeq)),w
+	btfsc	status,2
+	goto	u531
+	goto	u530
+u531:
+	goto	l109
+u530:
+	line	70
+	
+l1001:	
+	movlw	low(01h)
+	movwf	(??_send+0)+0
+	movf	(??_send+0)+0,w
+	addwf	(_seq),f
+	line	90
+	
+l109:	
+	return
+	callstack 0
+GLOBAL	__end_of_send
+	__end_of_send:
+	signat	_send,12409
 	global	_transmitByte
 
 ;; *************** function _transmitByte *****************
@@ -980,110 +1233,109 @@ GLOBAL	__end_of_main
 ;; This function calls:
 ;;		Nothing
 ;; This function is called by:
-;;		_main
+;;		_send
 ;; This function uses a non-reentrant model
 ;;
-psect	text1,local,class=CODE,delta=2,merge=1,group=0
-	file	"../lib/TinyRF_TX.c"
+psect	text2,local,class=CODE,delta=2,merge=1,group=0
 	line	106
-global __ptext1
-__ptext1:	;psect for function _transmitByte
-psect	text1
+global __ptext2
+__ptext2:	;psect for function _transmitByte
+psect	text2
 	file	"../lib/TinyRF_TX.c"
 	line	106
 	
 _transmitByte:	
 ;incstack = 0
-	callstack 7
+	callstack 6
 ; Regs used in _transmitByte: [wreg+status,2+status,0]
 	movwf	(transmitByte@_byte)
 	line	108
 	
-l825:	
+l921:	
 	movlw	low(07h)
 	movwf	(transmitByte@i)
 	line	112
 	
-l827:	
-	bsf	(61/8),(61)&7	;volatile
+l923:	
+	bcf	(61/8),(61)&7	;volatile
 	line	114
 	
-l829:	
+l925:	
 	movlw	low(01h)
 	movwf	(??_transmitByte+0)+0
 	incf	(transmitByte@i),w
-	goto	u394
-u395:
+	goto	u344
+u345:
 	clrc
 	rlf	(??_transmitByte+0)+0,f
-u394:
+u344:
 	addlw	-1
 	skipz
-	goto	u395
+	goto	u345
 	movf	0+(??_transmitByte+0)+0,w
 	andwf	(transmitByte@_byte),w
 	btfsc	status,2
-	goto	u401
-	goto	u400
-u401:
-	goto	l833
-u400:
+	goto	u351
+	goto	u350
+u351:
+	goto	l929
+u350:
 	line	115
 	
-l831:	
+l927:	
 	asmopt push
 asmopt off
 	movlw	167
 movwf	((??_transmitByte+0)+0)
-	u507:
+	u647:
 decfsz	(??_transmitByte+0)+0,f
-	goto	u507
+	goto	u647
 	nop
 asmopt pop
 
 	line	116
-	goto	l835
+	goto	l931
 	line	118
 	
-l833:	
+l929:	
 	asmopt push
 asmopt off
 	movlw	84
 movwf	((??_transmitByte+0)+0)
-	u517:
+	u657:
 decfsz	(??_transmitByte+0)+0,f
-	goto	u517
+	goto	u657
 asmopt pop
 
 	line	122
 	
-l835:	
+l931:	
 	bcf	status, 5	;RP0=0, select bank0
-	bcf	(61/8),(61)&7	;volatile
+	bsf	(61/8),(61)&7	;volatile
 	line	123
 	asmopt push
 asmopt off
 	movlw	165
 movwf	((??_transmitByte+0)+0)
-	u527:
+	u667:
 decfsz	(??_transmitByte+0)+0,f
-	goto	u527
+	goto	u667
 	nop2
 asmopt pop
 
 	line	125
 	
-l837:	
+l933:	
 	movlw	01h
 	bcf	status, 5	;RP0=0, select bank0
 	subwf	(transmitByte@i),f
 		incf	(((transmitByte@i))),w
 	btfss	status,2
-	goto	u411
-	goto	u410
-u411:
-	goto	l827
-u410:
+	goto	u361
+	goto	u360
+u361:
+	goto	l923
+u360:
 	line	126
 	
 l122:	
@@ -1092,6 +1344,159 @@ l122:
 GLOBAL	__end_of_transmitByte
 	__end_of_transmitByte:
 	signat	_transmitByte,4217
+	global	_crc8
+
+;; *************** function _crc8 *****************
+;; Defined at:
+;;		line 18 in file "../lib/TinyRF.c"
+;; Parameters:    Size  Location     Type
+;;  data            1    wreg     PTR unsigned char 
+;;		 -> main@captured_byte(1), 
+;;  len             1    0[BANK0 ] unsigned char 
+;;  seq             1    1[BANK0 ] unsigned char 
+;; Auto vars:     Size  Location     Type
+;;  data            1    6[BANK0 ] PTR unsigned char 
+;;		 -> main@captured_byte(1), 
+;;  sum             1    3[BANK0 ] unsigned char 
+;;  tempI           1    5[BANK0 ] unsigned char 
+;;  extract         1    4[BANK0 ] unsigned char 
+;;  crc             1    7[BANK0 ] unsigned char 
+;; Return value:  Size  Location     Type
+;;                  1    wreg      unsigned char 
+;; Registers used:
+;;		wreg, fsr0l, fsr0h, status,2, status,0
+;; Tracked objects:
+;;		On entry : 100/0
+;;		On exit  : 100/0
+;;		Unchanged: 0/0
+;; Data sizes:     COMMON   BANK0
+;;      Params:         0       2
+;;      Locals:         0       5
+;;      Temps:          0       1
+;;      Totals:         0       8
+;;Total ram usage:        8 bytes
+;; Hardware stack levels used: 1
+;; This function calls:
+;;		Nothing
+;; This function is called by:
+;;		_send
+;; This function uses a non-reentrant model
+;;
+psect	text3,local,class=CODE,delta=2,merge=1,group=0
+	file	"../lib/TinyRF.c"
+	line	18
+global __ptext3
+__ptext3:	;psect for function _crc8
+psect	text3
+	file	"../lib/TinyRF.c"
+	line	18
+	
+_crc8:	
+;incstack = 0
+	callstack 6
+; Regs used in _crc8: [wreg-fsr0h+status,2+status,0]
+	movwf	(crc8@data)
+	line	19
+	
+l893:	
+	movf	(crc8@seq),w
+	movwf	(crc8@crc)
+	line	20
+	goto	l915
+	line	22
+	
+l895:	
+	movf	(crc8@data),w
+	movwf	fsr0
+	bcf	status, 7	;select IRP bank0
+	movf	indf,w
+	movwf	(crc8@extract)
+	
+l897:	
+	movlw	low(01h)
+	movwf	(??_crc8+0)+0
+	movf	(??_crc8+0)+0,w
+	addwf	(crc8@data),f
+	line	23
+	
+l899:	
+	movlw	low(08h)
+	movwf	(crc8@tempI)
+	goto	l913
+	line	25
+	
+l901:	
+	movf	(crc8@crc),w
+	xorwf	(crc8@extract),w
+	andlw	01h
+	movwf	(crc8@sum)
+	line	26
+	
+l903:	
+	clrc
+	rrf	(crc8@crc),f
+
+	line	27
+	
+l905:	
+	movf	((crc8@sum)),w
+	btfsc	status,2
+	goto	u311
+	goto	u310
+u311:
+	goto	l909
+u310:
+	line	29
+	
+l907:	
+	movlw	low(08Ch)
+	movwf	(??_crc8+0)+0
+	movf	(??_crc8+0)+0,w
+	xorwf	(crc8@crc),f
+	line	31
+	
+l909:	
+	clrc
+	rrf	(crc8@extract),f
+
+	line	23
+	
+l911:	
+	movlw	01h
+	subwf	(crc8@tempI),f
+	
+l913:	
+	movf	((crc8@tempI)),w
+	btfss	status,2
+	goto	u321
+	goto	u320
+u321:
+	goto	l901
+u320:
+	line	20
+	
+l915:	
+	movlw	01h
+	subwf	(crc8@len),f
+		incf	(((crc8@len))),w
+	btfss	status,2
+	goto	u331
+	goto	u330
+u331:
+	goto	l895
+u330:
+	line	34
+	
+l917:	
+	movf	(crc8@crc),w
+	line	35
+	
+l164:	
+	return
+	callstack 0
+GLOBAL	__end_of_crc8
+	__end_of_crc8:
+	signat	_crc8,12409
 	global	_modifyBit
 
 ;; *************** function _modifyBit *****************
@@ -1124,12 +1529,12 @@ GLOBAL	__end_of_transmitByte
 ;;		_main
 ;; This function uses a non-reentrant model
 ;;
-psect	text2,local,class=CODE,delta=2,merge=1,group=0
+psect	text4,local,class=CODE,delta=2,merge=1,group=0
 	file	"../main.c"
 	line	35
-global __ptext2
-__ptext2:	;psect for function _modifyBit
-psect	text2
+global __ptext4
+__ptext4:	;psect for function _modifyBit
+psect	text4
 	file	"../main.c"
 	line	35
 	
@@ -1139,21 +1544,21 @@ _modifyBit:
 ; Regs used in _modifyBit: [wreg+status,2+status,0]
 	line	37
 	
-l821:	
+l967:	
 	incf	(modifyBit@p),w
 	movwf	(??_modifyBit+0)+0
 	movlw	01h
 	movwf	(??_modifyBit+1)+0
 	movlw	0
 	movwf	(??_modifyBit+1)+0+1
-	goto	u374
-u375:
+	goto	u494
+u495:
 	clrc
 	rlf	(??_modifyBit+1)+0,f
 	rlf	(??_modifyBit+1)+1,f
-u374:
+u494:
 	decfsz	(??_modifyBit+0)+0,f
-	goto	u375
+	goto	u495
 	
 	movf	0+(??_modifyBit+1)+0,w
 	movwf	(modifyBit@mask)
@@ -1166,14 +1571,14 @@ u374:
 	movwf	(??_modifyBit+1)+0+1
 	movf	(modifyBit@b),w
 	movwf	(??_modifyBit+1)+0
-	goto	u384
-u385:
+	goto	u504
+u505:
 	clrc
 	rlf	(??_modifyBit+1)+0,f
 	rlf	(??_modifyBit+1)+1,f
-u384:
+u504:
 	decfsz	(??_modifyBit+0)+0,f
-	goto	u385
+	goto	u505
 	
 	movf	(modifyBit@mask+1),w
 	movwf	(??_modifyBit+3)+0+1
@@ -1232,12 +1637,12 @@ GLOBAL	__end_of_modifyBit
 ;;		_main
 ;; This function uses a non-reentrant model
 ;;
-psect	text3,local,class=CODE,delta=2,merge=1,group=1
+psect	text5,local,class=CODE,delta=2,merge=1,group=1
 	file	"/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c"
 	line	4
-global __ptext3
-__ptext3:	;psect for function ___ftge
-psect	text3
+global __ptext5
+__ptext5:	;psect for function ___ftge
+psect	text5
 	file	"/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c"
 	line	4
 	
@@ -1247,16 +1652,16 @@ ___ftge:
 ; Regs used in ___ftge: [wreg+status,2+status,0]
 	line	6
 	
-l851:	
+l1015:	
 	btfss	(___ftge@ff1+2),(23)&7
-	goto	u431
-	goto	u430
-u431:
-	goto	l855
-u430:
+	goto	u551
+	goto	u550
+u551:
+	goto	l1019
+u550:
 	line	7
 	
-l853:	
+l1017:	
 	movf	(___ftge@ff1),w
 	sublw	0
 	movwf	(___ftge@ff1)
@@ -1273,16 +1678,16 @@ l853:
 	movwf	2+(___ftge@ff1)
 	line	8
 	
-l855:	
+l1019:	
 	btfss	(___ftge@ff2+2),(23)&7
-	goto	u441
-	goto	u440
-u441:
-	goto	l859
-u440:
+	goto	u561
+	goto	u560
+u561:
+	goto	l1023
+u560:
 	line	9
 	
-l857:	
+l1021:	
 	movf	(___ftge@ff2),w
 	sublw	0
 	movwf	(___ftge@ff2)
@@ -1299,46 +1704,46 @@ l857:
 	movwf	2+(___ftge@ff2)
 	line	10
 	
-l859:	
+l1023:	
 	movlw	080h
 	xorwf	(___ftge@ff1+2),f
 	line	11
 	
-l861:	
+l1025:	
 	movlw	080h
 	xorwf	(___ftge@ff2+2),f
 	line	12
 	
-l863:	
+l1027:	
 	movf	(___ftge@ff2+2),w
 	subwf	(___ftge@ff1+2),w
 	skipz
-	goto	u455
+	goto	u575
 	movf	(___ftge@ff2+1),w
 	subwf	(___ftge@ff1+1),w
 	skipz
-	goto	u455
+	goto	u575
 	movf	(___ftge@ff2),w
 	subwf	(___ftge@ff1),w
-u455:
+u575:
 	skipnc
-	goto	u451
-	goto	u450
-u451:
-	goto	l867
-u450:
+	goto	u571
+	goto	u570
+u571:
+	goto	l1031
+u570:
 	
-l865:	
+l1029:	
 	clrc
 	
-	goto	l477
+	goto	l519
 	
-l867:	
+l1031:	
 	setc
 	
 	line	13
 	
-l477:	
+l519:	
 	return
 	callstack 0
 GLOBAL	__end_of___ftge
@@ -1375,12 +1780,12 @@ GLOBAL	__end_of___ftge
 ;;		_main
 ;; This function uses a non-reentrant model
 ;;
-psect	text4,local,class=CODE,delta=2,merge=1,group=1
+psect	text6,local,class=CODE,delta=2,merge=1,group=1
 	file	"/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c"
 	line	32
-global __ptext4
-__ptext4:	;psect for function ___awtoft
-psect	text4
+global __ptext6
+__ptext6:	;psect for function ___awtoft
+psect	text6
 	file	"/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c"
 	line	32
 	
@@ -1390,20 +1795,20 @@ ___awtoft:
 ; Regs used in ___awtoft: [wreg+status,2+status,0+pclath+cstack]
 	line	36
 	
-l839:	
+l1003:	
 	clrf	(___awtoft@sign)
 	line	37
 	
-l841:	
+l1005:	
 	btfss	(___awtoft@c+1),7
-	goto	u421
-	goto	u420
-u421:
-	goto	l847
-u420:
+	goto	u541
+	goto	u540
+u541:
+	goto	l1011
+u540:
 	line	38
 	
-l843:	
+l1007:	
 	comf	(___awtoft@c),f
 	comf	(___awtoft@c+1),f
 	incf	(___awtoft@c),f
@@ -1411,12 +1816,12 @@ l843:
 	incf	(___awtoft@c+1),f
 	line	39
 	
-l845:	
+l1009:	
 	clrf	(___awtoft@sign)
 	incf	(___awtoft@sign),f
 	line	41
 	
-l847:	
+l1011:	
 	movf	(___awtoft@c),w
 	movwf	(___ftpack@arg)
 	movf	(___awtoft@c+1),w
@@ -1435,7 +1840,7 @@ l847:
 	movwf	(?___awtoft+2)
 	line	42
 	
-l410:	
+l452:	
 	return
 	callstack 0
 GLOBAL	__end_of___awtoft
@@ -1473,12 +1878,12 @@ GLOBAL	__end_of___awtoft
 ;;		___awtoft
 ;; This function uses a non-reentrant model
 ;;
-psect	text5,local,class=CODE,delta=2,merge=1,group=1
+psect	text7,local,class=CODE,delta=2,merge=1,group=1
 	file	"/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c"
 	line	62
-global __ptext5
-__ptext5:	;psect for function ___ftpack
-psect	text5
+global __ptext7
+__ptext7:	;psect for function ___ftpack
+psect	text7
 	file	"/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c"
 	line	62
 	
@@ -1488,75 +1893,75 @@ ___ftpack:
 ; Regs used in ___ftpack: [wreg+status,2+status,0]
 	line	64
 	
-l789:	
+l935:	
 	movf	((___ftpack@exp)),w
 	btfsc	status,2
-	goto	u251
-	goto	u250
-u251:
-	goto	l793
-u250:
+	goto	u371
+	goto	u370
+u371:
+	goto	l939
+u370:
 	
-l791:	
+l937:	
 	movf	(___ftpack@arg+2),w
 	iorwf	(___ftpack@arg+1),w
 	iorwf	(___ftpack@arg),w
 	skipz
-	goto	u261
-	goto	u260
-u261:
-	goto	l799
-u260:
+	goto	u381
+	goto	u380
+u381:
+	goto	l945
+u380:
 	line	65
 	
-l793:	
+l939:	
 	movlw	0x0
 	movwf	(?___ftpack)
 	movlw	0x0
 	movwf	(?___ftpack+1)
 	movlw	0x0
 	movwf	(?___ftpack+2)
-	goto	l416
+	goto	l458
 	line	67
 	
-l797:	
+l943:	
 	movlw	low(01h)
 	movwf	(??___ftpack+0)+0
 	movf	(??___ftpack+0)+0,w
 	addwf	(___ftpack@exp),f
 	line	68
 	movlw	01h
-u275:
+u395:
 	clrc
 	rrf	(___ftpack@arg+2),f
 	rrf	(___ftpack@arg+1),f
 	rrf	(___ftpack@arg),f
 	addlw	-1
 	skipz
-	goto	u275
+	goto	u395
 
 	line	66
 	
-l799:	
+l945:	
 	movlw	low highword(0FE0000h)
 	andwf	(___ftpack@arg+2),w
 	btfss	status,2
-	goto	u281
-	goto	u280
-u281:
-	goto	l797
-u280:
-	goto	l420
+	goto	u401
+	goto	u400
+u401:
+	goto	l943
+u400:
+	goto	l462
 	line	71
 	
-l801:	
+l947:	
 	movlw	low(01h)
 	movwf	(??___ftpack+0)+0
 	movf	(??___ftpack+0)+0,w
 	addwf	(___ftpack@exp),f
 	line	72
 	
-l803:	
+l949:	
 	movlw	01h
 	addwf	(___ftpack@arg),f
 	movlw	0
@@ -1569,76 +1974,76 @@ movlw 1
 	addwf	(___ftpack@arg+2),f
 	line	73
 	
-l805:	
+l951:	
 	movlw	01h
-u295:
+u415:
 	clrc
 	rrf	(___ftpack@arg+2),f
 	rrf	(___ftpack@arg+1),f
 	rrf	(___ftpack@arg),f
 	addlw	-1
 	skipz
-	goto	u295
+	goto	u415
 
 	line	74
 	
-l420:	
+l462:	
 	line	70
 	movlw	low highword(0FF0000h)
 	andwf	(___ftpack@arg+2),w
 	btfss	status,2
-	goto	u301
-	goto	u300
-u301:
-	goto	l801
-u300:
-	goto	l809
+	goto	u421
+	goto	u420
+u421:
+	goto	l947
+u420:
+	goto	l955
 	line	76
 	
-l807:	
+l953:	
 	movlw	01h
 	subwf	(___ftpack@exp),f
 	line	77
 	movlw	01h
-u315:
+u435:
 	clrc
 	rlf	(___ftpack@arg),f
 	rlf	(___ftpack@arg+1),f
 	rlf	(___ftpack@arg+2),f
 	addlw	-1
 	skipz
-	goto	u315
+	goto	u435
 	line	75
 	
-l809:	
+l955:	
 	btfsc	(___ftpack@arg+1),(15)&7
-	goto	u321
-	goto	u320
-u321:
-	goto	l427
-u320:
+	goto	u441
+	goto	u440
+u441:
+	goto	l469
+u440:
 	
-l811:	
+l957:	
 	movlw	low(02h)
 	subwf	(___ftpack@exp),w
 	skipnc
-	goto	u331
-	goto	u330
-u331:
-	goto	l807
-u330:
+	goto	u451
+	goto	u450
+u451:
+	goto	l953
+u450:
 	
-l427:	
+l469:	
 	line	79
 	btfsc	(___ftpack@exp),(0)&7
-	goto	u341
-	goto	u340
-u341:
-	goto	l428
-u340:
+	goto	u461
+	goto	u460
+u461:
+	goto	l470
+u460:
 	line	80
 	
-l813:	
+l959:	
 	movlw	0FFh
 	andwf	(___ftpack@arg),f
 	movlw	07Fh
@@ -1646,28 +2051,28 @@ l813:
 	movlw	0FFh
 	andwf	(___ftpack@arg+2),f
 	
-l428:	
+l470:	
 	line	81
 	clrc
 	rrf	(___ftpack@exp),f
 
 	line	82
 	
-l815:	
+l961:	
 	movf	(___ftpack@exp),w
 	movwf	((??___ftpack+0)+0)
 	clrf	((??___ftpack+0)+0+1)
 	clrf	((??___ftpack+0)+0+2)
 	movlw	010h
-u355:
+u475:
 	clrc
 	rlf	(??___ftpack+0)+0,f
 	rlf	(??___ftpack+0)+1,f
 	rlf	(??___ftpack+0)+2,f
-u350:
+u470:
 	addlw	-1
 	skipz
-	goto	u355
+	goto	u475
 	movf	0+(??___ftpack+0)+0,w
 	iorwf	(___ftpack@arg),f
 	movf	1+(??___ftpack+0)+0,w
@@ -1676,24 +2081,24 @@ u350:
 	iorwf	(___ftpack@arg+2),f
 	line	83
 	
-l817:	
+l963:	
 	movf	((___ftpack@sign)),w
 	btfsc	status,2
-	goto	u361
-	goto	u360
-u361:
-	goto	l429
-u360:
+	goto	u481
+	goto	u480
+u481:
+	goto	l471
+u480:
 	line	84
 	
-l819:	
+l965:	
 	bsf	(___ftpack@arg)+(23/8),(23)&7
 	
-l429:	
+l471:	
 	line	85
 	line	86
 	
-l416:	
+l458:	
 	return
 	callstack 0
 GLOBAL	__end_of___ftpack

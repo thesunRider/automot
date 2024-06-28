@@ -16,8 +16,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _RC0 `Vb ~T0 @X0 0 e@56 ]
 "1622
 [v _RC1 `Vb ~T0 @X0 0 e@57 ]
-"23 ../lib/TinyRF_TX.h
-[v _transmitByte `(v ~T0 @X0 0 ef1`uc ]
+"17 ../lib/TinyRF_TX.h
+[v _send `(v ~T0 @X0 0 ef3`*uc`uc`uc ]
 [v F38 `(v ~T0 @X0 1 tf1`ul ]
 "20 /opt/microchip/xc8/v2.46/pic/include/builtins.h
 [v __delay `JF38 ~T0 @X0 0 e ]
@@ -130,7 +130,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 "94
 [v _NUM_PREAMBLE_BYTES `Cui ~T0 @X0 1 e ]
 [i _NUM_PREAMBLE_BYTES
--> -> 15 `i `ui
+-> -> 4 `i `ui
 ]
 "110
 [v _ONE_PULSE_TRIGG_ERROR `Cui ~T0 @X0 1 e ]
@@ -222,7 +222,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 "62
 {
 "63
-[e $ ! || >= -> _packet_cycle `d / -> -> 15 `i `d .2.3 == _packet_cycle -> 0 `i 71  ]
+[e $ ! || >= -> _packet_cycle `d / -> -> 20 `i `d .2.3 == _packet_cycle -> 0 `i 71  ]
 {
 "64
 {
@@ -236,34 +236,36 @@ Version 3.2 HI-TECH Software Intermediate Code
 "66
 [e = _captured_byte -> ( _modifyBit (3 , , -> _captured_byte `i -> 1 `i -> _RC1 `i `uc ]
 "68
-[e ( _transmitByte (1 _captured_byte ]
+[e ( _send (3 , , &U _captured_byte -> -> 1 `i `uc -> -> 1 `i `uc ]
 "69
-[e ( __delay (1 -> * -> -> 10 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
+[; <" clrwdt ;# ">
 "70
+[e ( __delay (1 -> * -> _TX_DELAY_MICROS `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"71
 }
 "64
 [e ++ _i -> 1 `i ]
 [e $ < _i -> 5 `i 72  ]
 [e :U 73 ]
-"70
-}
 "71
-[e = _packet_cycle -> 0 `i ]
+}
 "72
+[e = _packet_cycle -> 0 `i ]
+"73
 }
 [e :U 71 ]
-"74
-[; <" sleep ;# ">
 "75
+[; <" sleep ;# ">
+"76
 [e ( ___nop ..  ]
-"77
-[e =+ _packet_cycle -> 1 `i ]
 "78
+[e =+ _packet_cycle -> 1 `i ]
+"79
 }
 [e :U 68 ]
 "61
 [e $U 69  ]
 [e :U 70 ]
-"79
+"80
 [e :UE 67 ]
 }

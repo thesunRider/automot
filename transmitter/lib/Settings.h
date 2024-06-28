@@ -1,8 +1,8 @@
 #ifndef TRF_SETTINGS_H
 #define TRF_SETTINGS_H
 
-#define LOW 1
-#define HIGH 0
+#define LOW 0
+#define HIGH 1
 
 
 /**

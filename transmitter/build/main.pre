@@ -1096,7 +1096,7 @@ const uint16_t ZERO_PULSE_PERIOD = 751;
 const uint16_t PERIOD_HIGH_DURATION = 498;
 const uint16_t TX_INTERVAL_CONST = 10002;
 const uint16_t TRIGGER_ERROR = 30;
-const uint16_t NUM_PREAMBLE_BYTES = 15;
+const uint16_t NUM_PREAMBLE_BYTES = 4;
 
 # 110
 const uint16_t ONE_PULSE_TRIGG_ERROR = (TRIGGER_ERROR + ONE_PULSE_PERIOD * 10 / 100);
@@ -1154,13 +1154,14 @@ PS2 = 1;
 
 while(1)
 {
-if (packet_cycle >= 15/2.3 || packet_cycle == 0){
+if (packet_cycle >= 20/2.3 || packet_cycle == 0){
 for (i=0; i < 5;i++){
 captured_byte = modifyBit(captured_byte,0,RC0);
 captured_byte = modifyBit(captured_byte,1,RC1);
 
-transmitByte(captured_byte);
-_delay((unsigned long)((10)*(4000000/4000.0)));
+send(&captured_byte,1,1);
+asm("clrwdt");
+_delay((unsigned long)((TX_DELAY_MICROS)*(4000000/4000000.0)));
 }
 packet_cycle = 0;
 }

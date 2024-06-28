@@ -1,0 +1,153 @@
+
+# 1 "../lib/TinyRF.c"
+
+# 13 "/opt/microchip/xc8/v2.46/pic/include/c90/stdint.h"
+typedef signed char int8_t;
+
+# 20
+typedef signed int int16_t;
+
+# 28
+typedef __int24 int24_t;
+
+# 36
+typedef signed long int int32_t;
+
+# 52
+typedef unsigned char uint8_t;
+
+# 58
+typedef unsigned int uint16_t;
+
+# 65
+typedef __uint24 uint24_t;
+
+# 72
+typedef unsigned long int uint32_t;
+
+# 88
+typedef signed char int_least8_t;
+
+# 96
+typedef signed int int_least16_t;
+
+# 109
+typedef __int24 int_least24_t;
+
+# 118
+typedef signed long int int_least32_t;
+
+# 136
+typedef unsigned char uint_least8_t;
+
+# 143
+typedef unsigned int uint_least16_t;
+
+# 154
+typedef __uint24 uint_least24_t;
+
+# 162
+typedef unsigned long int uint_least32_t;
+
+# 181
+typedef signed char int_fast8_t;
+
+# 188
+typedef signed int int_fast16_t;
+
+# 200
+typedef __int24 int_fast24_t;
+
+# 208
+typedef signed long int int_fast32_t;
+
+# 224
+typedef unsigned char uint_fast8_t;
+
+# 230
+typedef unsigned int uint_fast16_t;
+
+# 240
+typedef __uint24 uint_fast24_t;
+
+# 247
+typedef unsigned long int uint_fast32_t;
+
+# 268
+typedef int32_t intmax_t;
+
+# 282
+typedef uint32_t uintmax_t;
+
+# 289
+typedef int16_t intptr_t;
+
+
+
+
+typedef uint16_t uintptr_t;
+
+# 15 "/opt/microchip/xc8/v2.46/pic/include/c90/stdbool.h"
+typedef unsigned char bool;
+
+# 7 "../lib/TinyRF.h"
+typedef uint8_t byte;
+typedef bool boolean;
+
+# 88
+const uint16_t START_PULSE_PERIOD = 1998;
+const uint16_t ONE_PULSE_PERIOD = 1001;
+const uint16_t ZERO_PULSE_PERIOD = 751;
+const uint16_t PERIOD_HIGH_DURATION = 498;
+const uint16_t TX_INTERVAL_CONST = 10002;
+const uint16_t TRIGGER_ERROR = 30;
+const uint16_t NUM_PREAMBLE_BYTES = 4;
+
+# 110
+const uint16_t ONE_PULSE_TRIGG_ERROR = (TRIGGER_ERROR + ONE_PULSE_PERIOD * 10 / 100);
+const uint16_t ZERO_PULSE_TRIGG_ERROR = (TRIGGER_ERROR + ZERO_PULSE_PERIOD * 10 / 100);
+const uint16_t START_PULSE_TRIGG_ERROR = (TRIGGER_ERROR + START_PULSE_PERIOD * 10 / 100);
+
+const uint16_t START_PULSE_MAX_ERROR = 2*START_PULSE_TRIGG_ERROR;
+
+const uint16_t MIN_TX_INTERVAL_REAL = START_PULSE_PERIOD + START_PULSE_MAX_ERROR;
+
+const uint16_t TX_DELAY_MICROS = MIN_TX_INTERVAL_REAL * 2;
+
+# 124
+byte checksum8(byte data[], uint8_t len, uint8_t seq);
+byte crc8(byte data[], uint8_t len, uint8_t seq);
+
+# 4 "../lib/TinyRF.c"
+byte checksum8(byte data[], uint8_t len, uint8_t seq){
+
+uint16_t sum = 0;
+sum += (~seq & 0xFF);
+for(uint8_t i=0; i<len; i++){
+sum += (~data[i] & 0xFF);
+}
+
+sum = (sum & 0xFF) + (sum >> 8);
+return (byte) ~sum;
+}
+
+
+
+byte crc8(byte data[], uint8_t len, uint8_t seq){
+byte crc = seq;
+while (len--)
+{
+byte extract = *data++;
+for (byte tempI = 8; tempI; tempI--)
+{
+byte sum = (crc ^ extract) & 0x01;
+crc >>= 1;
+if (sum)
+{
+crc ^= 0x8C;
+}
+extract >>= 1;
+}
+}
+return crc;
+}

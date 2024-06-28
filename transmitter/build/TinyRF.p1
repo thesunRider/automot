@@ -1,0 +1,169 @@
+Version 3.2 HI-TECH Software Intermediate Code
+"88 ../lib/TinyRF.h
+[v _START_PULSE_PERIOD `Cui ~T0 @X0 1 e ]
+[i _START_PULSE_PERIOD
+-> -> 1998 `i `ui
+]
+"89
+[v _ONE_PULSE_PERIOD `Cui ~T0 @X0 1 e ]
+[i _ONE_PULSE_PERIOD
+-> -> 1001 `i `ui
+]
+"90
+[v _ZERO_PULSE_PERIOD `Cui ~T0 @X0 1 e ]
+[i _ZERO_PULSE_PERIOD
+-> -> 751 `i `ui
+]
+"91
+[v _PERIOD_HIGH_DURATION `Cui ~T0 @X0 1 e ]
+[i _PERIOD_HIGH_DURATION
+-> -> 498 `i `ui
+]
+"92
+[v _TX_INTERVAL_CONST `Cui ~T0 @X0 1 e ]
+[i _TX_INTERVAL_CONST
+-> -> 10002 `i `ui
+]
+"93
+[v _TRIGGER_ERROR `Cui ~T0 @X0 1 e ]
+[i _TRIGGER_ERROR
+-> -> 30 `i `ui
+]
+"94
+[v _NUM_PREAMBLE_BYTES `Cui ~T0 @X0 1 e ]
+[i _NUM_PREAMBLE_BYTES
+-> -> 4 `i `ui
+]
+"110
+[v _ONE_PULSE_TRIGG_ERROR `Cui ~T0 @X0 1 e ]
+[i _ONE_PULSE_TRIGG_ERROR
++ _TRIGGER_ERROR / * _ONE_PULSE_PERIOD -> -> 10 `i `ui -> -> 100 `i `ui
+]
+"111
+[v _ZERO_PULSE_TRIGG_ERROR `Cui ~T0 @X0 1 e ]
+[i _ZERO_PULSE_TRIGG_ERROR
++ _TRIGGER_ERROR / * _ZERO_PULSE_PERIOD -> -> 10 `i `ui -> -> 100 `i `ui
+]
+"112
+[v _START_PULSE_TRIGG_ERROR `Cui ~T0 @X0 1 e ]
+[i _START_PULSE_TRIGG_ERROR
++ _TRIGGER_ERROR / * _START_PULSE_PERIOD -> -> 10 `i `ui -> -> 100 `i `ui
+]
+"114
+[v _START_PULSE_MAX_ERROR `Cui ~T0 @X0 1 e ]
+[i _START_PULSE_MAX_ERROR
+* -> -> 2 `i `ui _START_PULSE_TRIGG_ERROR
+]
+"116
+[v _MIN_TX_INTERVAL_REAL `Cui ~T0 @X0 1 e ]
+[i _MIN_TX_INTERVAL_REAL
++ _START_PULSE_PERIOD _START_PULSE_MAX_ERROR
+]
+"118
+[v _TX_DELAY_MICROS `Cui ~T0 @X0 1 e ]
+[i _TX_DELAY_MICROS
+* _MIN_TX_INTERVAL_REAL -> -> 2 `i `ui
+]
+"4 ../lib/TinyRF.c
+[v _checksum8 `(uc ~T0 @X0 1 ef3`*uc`uc`uc ]
+{
+[e :U _checksum8 ]
+[v _data `*uc ~T0 @X0 1 r1 ]
+[v _len `uc ~T0 @X0 1 r2 ]
+[v _seq `uc ~T0 @X0 1 r3 ]
+[f ]
+"6
+[v _sum `ui ~T0 @X0 1 a ]
+[e = _sum -> -> 0 `i `ui ]
+"7
+[e =+ _sum -> & ~ -> _seq `i -> 255 `i `ui ]
+"8
+{
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+[e $U 5  ]
+[e :U 2 ]
+{
+"9
+[e =+ _sum -> & ~ -> *U + _data * -> _i `ux -> -> # *U _data `ui `ux `i -> 255 `i `ui ]
+"10
+}
+"8
+[e ++ _i -> -> 1 `i `uc ]
+[e :U 5 ]
+[e $ < -> _i `i -> _len `i 2  ]
+[e :U 3 ]
+"10
+}
+"12
+[e = _sum + & _sum -> -> 255 `i `ui >> _sum -> 8 `i ]
+"13
+[e ) -> ~ _sum `uc ]
+[e $UE 1  ]
+"14
+[e :UE 1 ]
+}
+"18
+[v _crc8 `(uc ~T0 @X0 1 ef3`*uc`uc`uc ]
+{
+[e :U _crc8 ]
+[v _data `*uc ~T0 @X0 1 r1 ]
+[v _len `uc ~T0 @X0 1 r2 ]
+[v _seq `uc ~T0 @X0 1 r3 ]
+[f ]
+"19
+[v _crc `uc ~T0 @X0 1 a ]
+[e = _crc _seq ]
+"20
+[e $U 7  ]
+[e :U 8 ]
+"21
+{
+"22
+[v _extract `uc ~T0 @X0 1 a ]
+[e = _extract *U ++ _data * -> -> 1 `i `x -> -> # *U _data `i `x ]
+"23
+{
+[v _tempI `uc ~T0 @X0 1 a ]
+[e = _tempI -> -> 8 `i `uc ]
+[e $U 13  ]
+"24
+[e :U 10 ]
+{
+"25
+[v _sum `uc ~T0 @X0 1 a ]
+[e = _sum -> & ^ -> _crc `i -> _extract `i -> 1 `i `uc ]
+"26
+[e =>> _crc -> 1 `i ]
+"27
+[e $ ! != -> _sum `i -> -> -> 0 `i `uc `i 14  ]
+"28
+{
+"29
+[e =^ _crc -> -> 140 `i `uc ]
+"30
+}
+[e :U 14 ]
+"31
+[e =>> _extract -> 1 `i ]
+"32
+}
+"23
+[e -- _tempI -> -> 1 `i `uc ]
+[e :U 13 ]
+[e $ != -> _tempI `i -> -> -> 0 `i `uc `i 10  ]
+[e :U 11 ]
+"32
+}
+"33
+}
+[e :U 7 ]
+"20
+[e $ != -> -- _len -> -> 1 `i `uc `i -> -> -> 0 `i `uc `i 8  ]
+[e :U 9 ]
+"34
+[e ) _crc ]
+[e $UE 6  ]
+"35
+[e :UE 6 ]
+}

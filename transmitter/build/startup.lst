@@ -1,7 +1,7 @@
 
 
 Microchip MPLAB XC8 Assembler V2.46 build 20240104201356 
-                                                                                                           Fri Jun 28 13:30:09 2024
+                                                                                                           Fri Jun 28 14:13:17 2024
 
 
      1                           	processor	16F676
@@ -42,7 +42,7 @@ Microchip MPLAB XC8 Assembler V2.46 build 20240104201356
     36                           ;
     37                           ; Compiler options:
     38                           ;
-    39                           ; ../main.c ../lib/TinyRF_TX.c
+    39                           ; ../main.c ../lib/TinyRF_TX.c ../lib/TinyRF.c
     40                           ;
     41     0000                     C	set	0
     42     0002                     Z	set	2
@@ -93,9 +93,9 @@ Microchip MPLAB XC8 Assembler V2.46 build 20240104201356
 
 
 Microchip Technology PIC Macro Assembler V2.46 build 20240104201356 
-Symbol Table                                                                                               Fri Jun 28 13:30:09 2024
+Symbol Table                                                                                               Fri Jun 28 14:13:17 2024
 
-               ___sp 07FE                 _main 0373                 start 0000                STATUS 0003  
+               ___sp 07FE                 _main 036D                 start 0000                STATUS 0003  
        ___osccal_val 03FF           ___stack_hi 07FE           ___stack_lo 07FE       ___int_stack_hi 07FE  
      ___int_stack_lo 07FE  start_initialization 03FB            ___heap_hi 0000            ___heap_lo 0000  
           ___stackhi 0000            ___stacklo 0000             ___int_sp 07FE             intlevel0 0000  

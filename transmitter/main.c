@@ -26,7 +26,7 @@ RFIN - RC5
 */
 #define NUM_PACKETS 5
 #define WDT_TIMEOUT 2.3 //with max prescaler this much timeout can be achieved from WDT
-#define SLEEP_TIME 15 //15seconds of sleep
+#define SLEEP_TIME 20 //15seconds of sleep
 
 
 //intosc with watchdog timer
@@ -65,8 +65,9 @@ int main(void)
 		        captured_byte = modifyBit(captured_byte,0,RC0);
 				captured_byte = modifyBit(captured_byte,1,RC1);
 		        
-		        transmitByte(captured_byte);
-		        __delay_ms(10);
+		        send(&captured_byte,1,1);
+                CLRWDT();
+		        __delay_us(TX_DELAY_MICROS);
 	    	}
 	    	packet_cycle = 0; 
 	    }

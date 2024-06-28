@@ -91,7 +91,7 @@ typedef bool boolean;
 	const uint16_t PERIOD_HIGH_DURATION = 498;
 	const uint16_t TX_INTERVAL_CONST = 10002;
 	const uint16_t TRIGGER_ERROR = 30;
-	const uint16_t NUM_PREAMBLE_BYTES = 15;
+	const uint16_t NUM_PREAMBLE_BYTES = 4;
 #endif
 
 #ifdef TRF_BITRATE_2000
