@@ -1,5 +1,5 @@
 
-# 1 "../test.c"
+# 1 "../main.c"
 
 # 18 "/opt/microchip/xc8/v2.46/pic/include/xc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -1123,7 +1123,7 @@ void sendMulti(byte data[], uint8_t len, uint8_t times);
 void transmitByte(byte _byte);
 
 
-# 33 "../test.c"
+# 33 "../main.c"
 #pragma config FOSC=INTRCIO,MCLRE=OFF,WDTE=ON,BOREN=OFF,PWRTE=OFF
 
 int modifyBit(int n, int p, int b)

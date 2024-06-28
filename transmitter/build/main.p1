@@ -162,7 +162,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [i _TX_DELAY_MICROS
 * _MIN_TX_INTERVAL_REAL -> -> 2 `i `ui
 ]
-"33 ../test.c
+"33 ../main.c
 [p x FOSC=INTRCIO ]
 [p x MCLRE=OFF ]
 [p x WDTE=ON ]

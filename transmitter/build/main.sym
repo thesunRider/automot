@@ -180,8 +180,8 @@ startup.as
 87 2 0 CODE 0
 88 3 0 CODE 0
 90 4 0 CODE 0
-test.obj
-test.as
+main.obj
+main.as
 479 3FB 0 CODE 0
 482 3FB 0 CODE 0
 493 3FB 0 CODE 0
@@ -189,7 +189,7 @@ test.as
 500 3FD 0 CODE 0
 502 3FD 0 CODE 0
 503 3FE 0 CODE 0
-../test.c
+../main.c
 42 373 0 CODE 0
 45 373 0 CODE 0
 48 375 0 CODE 0
@@ -235,7 +235,7 @@ test.as
 122 29D 0 CODE 0
 123 29F 0 CODE 0
 125 2A4 0 CODE 0
-../test.c
+../main.c
 35 2D8 0 CODE 0
 37 2D8 0 CODE 0
 37 2DF 0 CODE 0

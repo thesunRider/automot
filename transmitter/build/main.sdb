@@ -7,7 +7,7 @@
 [v _send send `(v  1 e 1 0 ]
 "106
 [v _transmitByte transmitByte `(v  1 e 1 0 ]
-"35 /home/surya/Desktop/automot/transmitter/test.c
+"35 /home/surya/Desktop/automot/transmitter/main.c
 [v _modifyBit modifyBit `(i  1 e 2 0 ]
 "42
 [v _main main `(i  1 e 2 0 ]
@@ -41,7 +41,7 @@
 [v _RC1 RC1 `VEb  1 e 0 @57 ]
 "1634
 [v _RC5 RC5 `VEb  1 e 0 @61 ]
-"42 /home/surya/Desktop/automot/transmitter/test.c
+"42 /home/surya/Desktop/automot/transmitter/main.c
 [v _main main `(i  1 e 2 0 ]
 {
 "45
@@ -64,7 +64,7 @@
 [v transmitByte@_byte _byte `uc  1 a 1 1 ]
 "126
 } 0
-"35 /home/surya/Desktop/automot/transmitter/test.c
+"35 /home/surya/Desktop/automot/transmitter/main.c
 [v _modifyBit modifyBit `(i  1 e 2 0 ]
 {
 "37

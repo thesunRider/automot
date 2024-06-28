@@ -181,11 +181,11 @@ Version 3.2 HI-TECH Software Intermediate Code
 "36
 }
 "40
-[e = _RC5 -> -> 0 `i `b ]
+[e = _RC5 -> -> 1 `i `b ]
 "41
 [e ( __delay (1 -> * -> - _START_PULSE_PERIOD _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "42
-[e = _RC5 -> -> 1 `i `b ]
+[e = _RC5 -> -> 0 `i `b ]
 "43
 [e ( __delay (1 -> * -> _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "45
@@ -207,7 +207,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e $ != -> -- _len -> -> 1 `i `uc `i -> -> -> 0 `i `uc `i 71  ]
 [e :U 72 ]
 "65
-[e = _RC5 -> -> 0 `i `b ]
+[e = _RC5 -> -> 1 `i `b ]
 "69
 [e $ ! != -> _incrementSeq `i -> -> -> 0 `i `uc `i 73  ]
 {
@@ -265,7 +265,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e :U 82 ]
 {
 "112
-[e = _RC5 -> -> 0 `i `b ]
+[e = _RC5 -> -> 1 `i `b ]
 "114
 [e $ ! != & -> __byte `i << -> 1 `i _i -> 0 `i 83  ]
 {
@@ -283,7 +283,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 }
 [e :U 84 ]
 "122
-[e = _RC5 -> -> 1 `i `b ]
+[e = _RC5 -> -> 0 `i `b ]
 "123
 [e ( __delay (1 -> * -> _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "125

@@ -480,7 +480,7 @@ _PSA	set	0x40B
 	config PWRTE = "OFF"
 	config MCLRE = "OFF"
 	config BOREN = "OFF"
-	file	"test.as"
+	file	"main.as"
 	line	#
 psect cinit,class=CODE,delta=2
 global start_initialization
@@ -494,7 +494,7 @@ __pbssBANK0:
 _seq:
        ds      1
 
-	file	"test.as"
+	file	"main.as"
 	line	#
 ; Clear objects allocated to BANK0
 psect cinit,class=CODE,delta=2,merge=1
@@ -680,7 +680,7 @@ main@captured_byte:	; 1 bytes @ 0x1A
 
 ;; *************** function _main *****************
 ;; Defined at:
-;;		line 42 in file "../test.c"
+;;		line 42 in file "../main.c"
 ;; Parameters:    Size  Location     Type
 ;;		None
 ;; Auto vars:     Size  Location     Type
@@ -712,12 +712,12 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;; This function uses a non-reentrant model
 ;;
 psect	maintext,global,class=CODE,delta=2,split=1,group=0
-	file	"../test.c"
+	file	"../main.c"
 	line	42
 global __pmaintext
 __pmaintext:	;psect for function _main
 psect	maintext
-	file	"../test.c"
+	file	"../main.c"
 	line	42
 	
 _main:	
@@ -744,7 +744,7 @@ l875:
 	bcf	status, 5	;RP0=0, select bank0
 	movwf	(main@captured_byte)
 	line	53
-# 53 "../test.c"
+# 53 "../main.c"
 clrwdt ;# 
 psect	maintext
 	line	55
@@ -924,7 +924,7 @@ l903:
 	
 l57:	
 	line	74
-# 74 "../test.c"
+# 74 "../main.c"
 sleep ;# 
 psect	maintext
 	line	75
@@ -1005,7 +1005,7 @@ l825:
 	line	112
 	
 l827:	
-	bcf	(61/8),(61)&7	;volatile
+	bsf	(61/8),(61)&7	;volatile
 	line	114
 	
 l829:	
@@ -1059,7 +1059,7 @@ asmopt pop
 	
 l835:	
 	bcf	status, 5	;RP0=0, select bank0
-	bsf	(61/8),(61)&7	;volatile
+	bcf	(61/8),(61)&7	;volatile
 	line	123
 	asmopt push
 asmopt off
@@ -1096,7 +1096,7 @@ GLOBAL	__end_of_transmitByte
 
 ;; *************** function _modifyBit *****************
 ;; Defined at:
-;;		line 35 in file "../test.c"
+;;		line 35 in file "../main.c"
 ;; Parameters:    Size  Location     Type
 ;;  n               2    0[BANK0 ] int 
 ;;  p               2    2[BANK0 ] int 
@@ -1125,12 +1125,12 @@ GLOBAL	__end_of_transmitByte
 ;; This function uses a non-reentrant model
 ;;
 psect	text2,local,class=CODE,delta=2,merge=1,group=0
-	file	"../test.c"
+	file	"../main.c"
 	line	35
 global __ptext2
 __ptext2:	;psect for function _modifyBit
 psect	text2
-	file	"../test.c"
+	file	"../main.c"
 	line	35
 	
 _modifyBit:	
