@@ -1,3 +1,6 @@
 [submodule "lib/TinyRF"]
 	path = lib/TinyRF
 	url = https://github.com/pouriap/TinyRF.git
+[submodule "lib/ardpicprog"]
+	path = lib/ardpicprog
+	url = https://github.com/rweather/ardpicprog.git

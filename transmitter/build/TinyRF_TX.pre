@@ -1,5 +1,5 @@
 
-# 1 "../test.c"
+# 1 "../lib/TinyRF_TX.c"
 
 # 18 "/opt/microchip/xc8/v2.46/pic/include/xc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -1122,32 +1122,90 @@ void sendMulti(byte data[], uint8_t len, uint8_t times);
 
 void transmitByte(byte _byte);
 
+# 4 "../lib/TinyRF_TX.c"
+uint8_t seq = 0;
 
-# 29 "../test.c"
-#pragma config FOSC=INTRCIO,MCLRE=OFF,WDTE=ON,BOREN=OFF
+# 19
+void send(byte* data, uint8_t len, boolean incrementSeq){
 
-int modifyBit(int n, int p, int b)
-{
-int mask = 1 << p;
-return ((n & ~mask) | (b << p));
+# 25
+byte errChck = crc8(data, len, seq);
+
+# 34
+for(uint8_t i=0; i<NUM_PREAMBLE_BYTES; i++){
+transmitByte(0x00);
 }
 
 
-int main(void)
-{
 
-TRISC = 0b00000011;
+RC5 = 0;
+_delay((unsigned long)((START_PULSE_PERIOD - PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
+RC5 = 1;
+_delay((unsigned long)((PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
 
-uint8_t captured_byte = 0xFF;
+transmitByte(len);
 
 
 
-while(1)
-{
-captured_byte = modifyBit(captured_byte,0,RC0);
-captured_byte = modifyBit(captured_byte,1,RC1);
+transmitByte(errChck);
 
-transmitByte(captured_byte);
-_delay((unsigned long)((100)*(4000000/4000.0)));
+
+
+
+transmitByte(seq);
+
+
+
+
+while(len--){
+transmitByte(data[len]);
 }
+
+
+
+RC5 = 0;
+
+
+
+if(incrementSeq){
+seq++;
+}
+
+# 90
+}
+
+void sendMulti(byte data[], uint8_t len, uint8_t times){
+for(uint8_t i=0; i<times; i++){
+send(data, len, 0);
+
+
+
+_delay((unsigned long)((MIN_TX_INTERVAL_REAL + TX_INTERVAL_CONST)*(4000000/4000000.0)));
+}
+
+seq++;
+
+}
+
+
+void transmitByte(byte _byte){
+
+uint8_t i=7;
+do{
+
+
+RC5 = 0;
+
+if(_byte & (1<<i)){
+_delay((unsigned long)((ONE_PULSE_PERIOD - PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
+}
+else{
+_delay((unsigned long)((ZERO_PULSE_PERIOD - PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
+}
+
+
+RC5 = 1;
+_delay((unsigned long)((PERIOD_HIGH_DURATION)*(4000000/4000000.0)));
+
+}while(i--);
 }

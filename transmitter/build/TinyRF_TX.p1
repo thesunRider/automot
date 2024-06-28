@@ -1,13 +1,10 @@
 Version 3.2 HI-TECH Software Intermediate Code
-[p mainexit ]
-"781 /opt/microchip/xc8/v2.46/pic/include/proc/pic16f676.h
-[v _TRISC `Vuc ~T0 @X0 0 e@135 ]
-"1619
-[v _RC0 `Vb ~T0 @X0 0 e@56 ]
-"1622
-[v _RC1 `Vb ~T0 @X0 0 e@57 ]
+"125 ../lib/TinyRF.h
+[v _crc8 `(uc ~T0 @X0 0 ef3`*uc`uc`uc ]
 "23 ../lib/TinyRF_TX.h
 [v _transmitByte `(v ~T0 @X0 0 ef1`uc ]
+"1634 /opt/microchip/xc8/v2.46/pic/include/proc/pic16f676.h
+[v _RC5 `Vb ~T0 @X0 0 e@61 ]
 [v F38 `(v ~T0 @X0 1 tf1`ul ]
 "20 /opt/microchip/xc8/v2.46/pic/include/builtins.h
 [v __delay `JF38 ~T0 @X0 0 e ]
@@ -149,61 +146,150 @@ Version 3.2 HI-TECH Software Intermediate Code
 [i _TX_DELAY_MICROS
 * _MIN_TX_INTERVAL_REAL -> -> 2 `i `ui
 ]
-"29 ../test.c
-[p x FOSC=INTRCIO ]
-[p x MCLRE=OFF ]
-[p x WDTE=ON ]
-[p x BOREN=OFF ]
-"31
-[v _modifyBit `(i ~T0 @X0 1 ef3`i`i`i ]
-"32
+"4 ../lib/TinyRF_TX.c
+[v _seq `uc ~T0 @X0 1 e ]
+[i _seq
+-> -> 0 `i `uc
+]
+"19
+[v _send `(v ~T0 @X0 1 ef3`*uc`uc`uc ]
 {
-[e :U _modifyBit ]
-"31
-[v _n `i ~T0 @X0 1 r1 ]
-[v _p `i ~T0 @X0 1 r2 ]
-[v _b `i ~T0 @X0 1 r3 ]
-"32
+[e :U _send ]
+[v _data `*uc ~T0 @X0 1 r1 ]
+[v _len `uc ~T0 @X0 1 r2 ]
+[v _incrementSeq `uc ~T0 @X0 1 r3 ]
 [f ]
-"33
-[v _mask `i ~T0 @X0 1 a ]
-[e = _mask << -> 1 `i _p ]
+"25
+[v _errChck `uc ~T0 @X0 1 a ]
+[e = _errChck ( _crc8 (3 , , _data _len _seq ]
 "34
-[e ) | & _n ~ _mask << _b _p ]
-[e $UE 66  ]
+{
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+[e $ < -> _i `ui _NUM_PREAMBLE_BYTES 67  ]
+[e $U 68  ]
+[e :U 67 ]
+{
 "35
+[e ( _transmitByte (1 -> -> 0 `i `uc ]
+"36
+}
+"34
+[e ++ _i -> -> 1 `i `uc ]
+[e $ < -> _i `ui _NUM_PREAMBLE_BYTES 67  ]
+[e :U 68 ]
+"36
+}
+"40
+[e = _RC5 -> -> 0 `i `b ]
+"41
+[e ( __delay (1 -> * -> - _START_PULSE_PERIOD _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"42
+[e = _RC5 -> -> 1 `i `b ]
+"43
+[e ( __delay (1 -> * -> _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"45
+[e ( _transmitByte (1 _len ]
+"49
+[e ( _transmitByte (1 _errChck ]
+"54
+[e ( _transmitByte (1 _seq ]
+"59
+[e $U 70  ]
+[e :U 71 ]
+{
+"60
+[e ( _transmitByte (1 *U + _data * -> _len `ux -> -> # *U _data `ui `ux ]
+"61
+}
+[e :U 70 ]
+"59
+[e $ != -> -- _len -> -> 1 `i `uc `i -> -> -> 0 `i `uc `i 71  ]
+[e :U 72 ]
+"65
+[e = _RC5 -> -> 0 `i `b ]
+"69
+[e $ ! != -> _incrementSeq `i -> -> -> 0 `i `uc `i 73  ]
+{
+"70
+[e ++ _seq -> -> 1 `i `uc ]
+"71
+}
+[e :U 73 ]
+"90
 [e :UE 66 ]
 }
-[v $root$_main `(v ~T0 @X0 0 e ]
-"38
-[v _main `(i ~T0 @X0 1 ef ]
-"39
+"92
+[v _sendMulti `(v ~T0 @X0 1 ef3`*uc`uc`uc ]
 {
-[e :U _main ]
+[e :U _sendMulti ]
+[v _data `*uc ~T0 @X0 1 r1 ]
+[v _len `uc ~T0 @X0 1 r2 ]
+[v _times `uc ~T0 @X0 1 r3 ]
 [f ]
-"41
-[e = _TRISC -> -> 3 `i `uc ]
-"43
-[v _captured_byte `uc ~T0 @X0 1 a ]
-[e = _captured_byte -> -> 255 `i `uc ]
-"47
-[e :U 69 ]
-"48
+"93
 {
-"49
-[e = _captured_byte -> ( _modifyBit (3 , , -> _captured_byte `i -> 0 `i -> _RC0 `i `uc ]
-"50
-[e = _captured_byte -> ( _modifyBit (3 , , -> _captured_byte `i -> 1 `i -> _RC1 `i `uc ]
-"52
-[e ( _transmitByte (1 _captured_byte ]
-"53
-[e ( __delay (1 -> * -> -> 100 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
-"54
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+[e $U 78  ]
+[e :U 75 ]
+{
+"94
+[e ( _send (3 , , _data _len -> -> 0 `i `uc ]
+"98
+[e ( __delay (1 -> * -> + _MIN_TX_INTERVAL_REAL _TX_INTERVAL_CONST `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"99
 }
-[e :U 68 ]
-"47
-[e $U 69  ]
-[e :U 70 ]
-"55
-[e :UE 67 ]
+"93
+[e ++ _i -> -> 1 `i `uc ]
+[e :U 78 ]
+[e $ < -> _i `i -> _times `i 75  ]
+[e :U 76 ]
+"99
+}
+"101
+[e ++ _seq -> -> 1 `i `uc ]
+"103
+[e :UE 74 ]
+}
+"106
+[v _transmitByte `(v ~T0 @X0 1 ef1`uc ]
+{
+[e :U _transmitByte ]
+[v __byte `uc ~T0 @X0 1 r1 ]
+[f ]
+"108
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 7 `i `uc ]
+"109
+[e :U 82 ]
+{
+"112
+[e = _RC5 -> -> 0 `i `b ]
+"114
+[e $ ! != & -> __byte `i << -> 1 `i _i -> 0 `i 83  ]
+{
+"115
+[e ( __delay (1 -> * -> - _ONE_PULSE_PERIOD _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"116
+}
+[e $U 84  ]
+"117
+[e :U 83 ]
+{
+"118
+[e ( __delay (1 -> * -> - _ZERO_PULSE_PERIOD _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"119
+}
+[e :U 84 ]
+"122
+[e = _RC5 -> -> 1 `i `b ]
+"123
+[e ( __delay (1 -> * -> _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+"125
+}
+[e $ != -> -- _i -> -> 1 `i `uc `i -> -> -> 0 `i `uc `i 82  ]
+[e :U 81 ]
+"126
+[e :UE 79 ]
 }

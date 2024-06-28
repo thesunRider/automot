@@ -7,7 +7,7 @@
 	;
 	; Compiler options:
 	;
-	; ../test.c
+	; ../test.c ../lib/TinyRF_TX.c
 	;
 
 
