@@ -47,6 +47,10 @@ int main(void)
     // Make RC0,RC1 a digital input , ,RC5 as digital output
     ANSEL = 0; //init as digital inputs first
     TRISC = 0b00000011; //set direction to input
+    CM2 = 1;  //disable comparator (save power)
+    CM1 = 1;
+    CM0 = 1;
+    VREN = 0; //disable voltage reference (save power)
     uint8_t captured_byte = 0xFF;
 
     //assign prescaler to wdt
