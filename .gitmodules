@@ -1,0 +1,3 @@
+[submodule "lib/TinyRF"]
+	path = lib/TinyRF
+	url = https://github.com/pouriap/TinyRF.git
