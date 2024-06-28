@@ -24,7 +24,8 @@ RFIN - RC5
 
 
 */
-
+#define NUM_PACKETS 5
+#define WDT_TIMEOUT 2.3 //with max prescaler this much timeout can be achieved from WDT
 #define SLEEP_TIME 15 //15seconds of sleep
 
 
@@ -40,19 +41,39 @@ int modifyBit(int n, int p, int b)
 
 int main(void)
 {
+	int i;
+	int packet_cycle = 0;
+
     // Make RC0,RC1 a digital input , ,RC5 as digital output
-    TRISC = 0b00000011;
+    ANSEL = 0; //init as digital inputs first
+    TRISC = 0b00000011; //set direction to input
     uint8_t captured_byte = 0xFF;
 
+    //assign prescaler to wdt
+    CLRWDT();
+    //OPTION_REG = 0b00101111;
+    PSA = 1;
+    PS0 = 1;
+    PS1 = 1;
+    PS2 = 1;
 
     // Blink LED on RD0 (pin 19)
     while(1)
-    {
-        captured_byte = modifyBit(captured_byte,0,RC0);
-    	captured_byte = modifyBit(captured_byte,1,RC1);
-        
-        transmitByte(captured_byte);
-        __delay_ms(100);
+    {	
+    	if (packet_cycle >= SLEEP_TIME/WDT_TIMEOUT || packet_cycle == 0){
+	    	for (i=0; i < NUM_PACKETS;i++){
+		        captured_byte = modifyBit(captured_byte,0,RC0);
+				captured_byte = modifyBit(captured_byte,1,RC1);
+		        
+		        transmitByte(captured_byte);
+		        __delay_ms(10);
+	    	}
+	    	packet_cycle = 0; 
+	    }
+
         SLEEP();
+        NOP();
+
+        ++packet_cycle;
     }
 }

@@ -1,7 +1,17 @@
 Version 3.2 HI-TECH Software Intermediate Code
 [p mainexit ]
-"781 /opt/microchip/xc8/v2.46/pic/include/proc/pic16f676.h
+"973 /opt/microchip/xc8/v2.46/pic/include/proc/pic16f676.h
+[v _ANSEL `Vuc ~T0 @X0 0 e@145 ]
+"781
 [v _TRISC `Vuc ~T0 @X0 0 e@135 ]
+"1592
+[v _PSA `Vb ~T0 @X0 0 e@1035 ]
+"1583
+[v _PS0 `Vb ~T0 @X0 0 e@1032 ]
+"1586
+[v _PS1 `Vb ~T0 @X0 0 e@1033 ]
+"1589
+[v _PS2 `Vb ~T0 @X0 0 e@1034 ]
 "1619
 [v _RC0 `Vb ~T0 @X0 0 e@56 ]
 "1622
@@ -12,6 +22,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 "20 /opt/microchip/xc8/v2.46/pic/include/builtins.h
 [v __delay `JF38 ~T0 @X0 0 e ]
 [p i __delay ]
+"8
+[v ___nop `(v ~T0 @X0 0 ef ]
+[p i ___nop ]
 "54 /opt/microchip/xc8/v2.46/pic/include/proc/pic16f676.h
 [; <" INDF equ 00h ;# ">
 "61
@@ -149,61 +162,108 @@ Version 3.2 HI-TECH Software Intermediate Code
 [i _TX_DELAY_MICROS
 * _MIN_TX_INTERVAL_REAL -> -> 2 `i `ui
 ]
-"29 ../test.c
+"33 ../test.c
 [p x FOSC=INTRCIO ]
 [p x MCLRE=OFF ]
 [p x WDTE=ON ]
 [p x BOREN=OFF ]
-"31
+[p x PWRTE=OFF ]
+"35
 [v _modifyBit `(i ~T0 @X0 1 ef3`i`i`i ]
-"32
+"36
 {
 [e :U _modifyBit ]
-"31
+"35
 [v _n `i ~T0 @X0 1 r1 ]
 [v _p `i ~T0 @X0 1 r2 ]
 [v _b `i ~T0 @X0 1 r3 ]
-"32
+"36
 [f ]
-"33
+"37
 [v _mask `i ~T0 @X0 1 a ]
 [e = _mask << -> 1 `i _p ]
-"34
+"38
 [e ) | & _n ~ _mask << _b _p ]
 [e $UE 66  ]
-"35
+"39
 [e :UE 66 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"38
+"42
 [v _main `(i ~T0 @X0 1 ef ]
-"39
+"43
 {
 [e :U _main ]
 [f ]
-"41
+"44
+[v _i `i ~T0 @X0 1 a ]
+"45
+[v _packet_cycle `i ~T0 @X0 1 a ]
+[e = _packet_cycle -> 0 `i ]
+"48
+[e = _ANSEL -> -> 0 `i `uc ]
+"49
 [e = _TRISC -> -> 3 `i `uc ]
-"43
+"50
 [v _captured_byte `uc ~T0 @X0 1 a ]
 [e = _captured_byte -> -> 255 `i `uc ]
-"47
-[e :U 69 ]
-"48
-{
-"49
-[e = _captured_byte -> ( _modifyBit (3 , , -> _captured_byte `i -> 0 `i -> _RC0 `i `uc ]
-"50
-[e = _captured_byte -> ( _modifyBit (3 , , -> _captured_byte `i -> 1 `i -> _RC1 `i `uc ]
-"52
-[e ( _transmitByte (1 _captured_byte ]
 "53
-[e ( __delay (1 -> * -> -> 100 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
-"54
+[; <" clrwdt ;# ">
+"55
+[e = _PSA -> -> 1 `i `b ]
+"56
+[e = _PS0 -> -> 1 `i `b ]
+"57
+[e = _PS1 -> -> 1 `i `b ]
+"58
+[e = _PS2 -> -> 1 `i `b ]
+"61
+[e :U 69 ]
+"62
+{
+"63
+[e $ ! || >= -> _packet_cycle `d / -> -> 15 `i `d .2.3 == _packet_cycle -> 0 `i 71  ]
+{
+"64
+{
+[e = _i -> 0 `i ]
+[e $ < _i -> 5 `i 72  ]
+[e $U 73  ]
+[e :U 72 ]
+{
+"65
+[e = _captured_byte -> ( _modifyBit (3 , , -> _captured_byte `i -> 0 `i -> _RC0 `i `uc ]
+"66
+[e = _captured_byte -> ( _modifyBit (3 , , -> _captured_byte `i -> 1 `i -> _RC1 `i `uc ]
+"68
+[e ( _transmitByte (1 _captured_byte ]
+"69
+[e ( __delay (1 -> * -> -> 10 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
+"70
+}
+"64
+[e ++ _i -> 1 `i ]
+[e $ < _i -> 5 `i 72  ]
+[e :U 73 ]
+"70
+}
+"71
+[e = _packet_cycle -> 0 `i ]
+"72
+}
+[e :U 71 ]
+"74
+[; <" sleep ;# ">
+"75
+[e ( ___nop ..  ]
+"77
+[e =+ _packet_cycle -> 1 `i ]
+"78
 }
 [e :U 68 ]
-"47
+"61
 [e $U 69  ]
 [e :U 70 ]
-"55
+"79
 [e :UE 67 ]
 }

@@ -1123,8 +1123,8 @@ void sendMulti(byte data[], uint8_t len, uint8_t times);
 void transmitByte(byte _byte);
 
 
-# 29 "../test.c"
-#pragma config FOSC=INTRCIO,MCLRE=OFF,WDTE=ON,BOREN=OFF
+# 33 "../test.c"
+#pragma config FOSC=INTRCIO,MCLRE=OFF,WDTE=ON,BOREN=OFF,PWRTE=OFF
 
 int modifyBit(int n, int p, int b)
 {
@@ -1135,19 +1135,39 @@ return ((n & ~mask) | (b << p));
 
 int main(void)
 {
+int i;
+int packet_cycle = 0;
 
+
+ANSEL = 0;
 TRISC = 0b00000011;
-
 uint8_t captured_byte = 0xFF;
 
+
+asm("clrwdt");
+
+PSA = 1;
+PS0 = 1;
+PS1 = 1;
+PS2 = 1;
 
 
 while(1)
 {
+if (packet_cycle >= 15/2.3 || packet_cycle == 0){
+for (i=0; i < 5;i++){
 captured_byte = modifyBit(captured_byte,0,RC0);
 captured_byte = modifyBit(captured_byte,1,RC1);
 
 transmitByte(captured_byte);
-_delay((unsigned long)((100)*(4000000/4000.0)));
+_delay((unsigned long)((10)*(4000000/4000.0)));
+}
+packet_cycle = 0;
+}
+
+asm("sleep");
+__nop();
+
+++packet_cycle;
 }
 }
