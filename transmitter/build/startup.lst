@@ -1,7 +1,7 @@
 
 
 Microchip MPLAB XC8 Assembler V2.46 build 20240104201356 
-                                                                                                           Fri Jun 28 14:13:17 2024
+                                                                                                           Fri Jun 28 14:25:46 2024
 
 
      1                           	processor	16F676
@@ -70,7 +70,7 @@ Microchip MPLAB XC8 Assembler V2.46 build 20240104201356
     64     0001  23FF               	fcall	___osccal_val
     65     0002  0090               	movwf	16
     66     0003  1283               	bcf	3,5	;select bank 0
-    67     0004  2BFB               	ljmp	start_initialization	;jump to C runtime clear & initialization
+    67     0004  2BFD               	ljmp	start_initialization	;jump to C runtime clear & initialization
     68                           
     69                           	psect	clrtext
     70     0004                     FSR	set	4
@@ -93,11 +93,11 @@ Microchip MPLAB XC8 Assembler V2.46 build 20240104201356
 
 
 Microchip Technology PIC Macro Assembler V2.46 build 20240104201356 
-Symbol Table                                                                                               Fri Jun 28 14:13:17 2024
+Symbol Table                                                                                               Fri Jun 28 14:25:46 2024
 
-               ___sp 07FE                 _main 036D                 start 0000                STATUS 0003  
+               ___sp 07FE                 _main 036F                 start 0000                STATUS 0003  
        ___osccal_val 03FF           ___stack_hi 07FE           ___stack_lo 07FE       ___int_stack_hi 07FE  
-     ___int_stack_lo 07FE  start_initialization 03FB            ___heap_hi 0000            ___heap_lo 0000  
+     ___int_stack_lo 07FE  start_initialization 03FD            ___heap_hi 0000            ___heap_lo 0000  
           ___stackhi 0000            ___stacklo 0000             ___int_sp 07FE             intlevel0 0000  
            intlevel1 0000             intlevel2 0000             intlevel3 0000             intlevel4 0000  
            intlevel5 0000             reset_vec 0000  

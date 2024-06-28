@@ -12,17 +12,16 @@
 # in delta units.  Any other numeric values are decimal.
 %PSECTS
 $main.obj
-cinit CODE 0 3FB 3FB 4 2 1
-text1 CODE 0 2C2 2C2 3F 2 1
-text2 CODE 0 213 213 29 2 1
-text3 CODE 0 23C 23C 2A 2 1
-text4 CODE 0 293 293 2F 2 1
-text5 CODE 0 266 266 2D 2 1
-text6 CODE 0 1F8 1F8 1B 2 1
-text7 CODE 0 301 301 6C 2 1
-maintext CODE 0 36D 36D 8E 2 1
+cinit CODE 0 3FD 3FD 2 2 1
+text1 CODE 0 2CE 2CE 35 2 1
+text2 CODE 0 21F 21F 29 2 1
+text3 CODE 0 248 248 2A 2 1
+text4 CODE 0 29F 29F 2F 2 1
+text5 CODE 0 272 272 2D 2 1
+text6 CODE 0 204 204 1B 2 1
+text7 CODE 0 303 303 6C 2 1
+maintext CODE 0 36F 36F 8E 2 1
 cstackBANK0 BANK0 1 20 20 1B 1 1
-bssBANK0 BANK0 1 3B 3B 1 1 1
 strings STRING 0 5 5 20 2 1
 config CONFIG 4 2007 2007 1 2 1
 $startup.obj
@@ -34,17 +33,17 @@ config CONFIG 4 2007 2007 1 2 1
 #    <class name> <range> <delta>
 # Addresses given in the range are in hexadecimal and units of delta.
 %UNUSED
-RAM 3C-5D 1
-BANK0 3C-5D 1
-CONST 25-1F7 2
-ENTRY 25-1F7 2
+RAM 3B-5D 1
+BANK0 3B-5D 1
+CONST 25-203 2
+ENTRY 25-203 2
 IDLOC 2000-2003 2
-CODE 25-1F7 2
+CODE 25-203 2
 SFR0 0-1F 1
 SFR1 80-DD 1
 EEDATA 2100-217F 2
-STRCODE 25-1F7 2
-STRING 25-1F7 2
+STRCODE 25-203 2
+STRING 25-203 2
 # %LINETAB Section
 # This section enumerates the file/line to address mappings.
 # The beginning of the section is indicated by %LINETAB.
@@ -59,154 +58,149 @@ STRING 25-1F7 2
 # All other numeric values are in decimal.
 %LINETAB
 $main.obj
-3FB cinit CODE >482:/home/surya/Desktop/automot/transmitter/build/main.as
-3FB cinit CODE >485:/home/surya/Desktop/automot/transmitter/build/main.as
-3FB cinit CODE >496:/home/surya/Desktop/automot/transmitter/build/main.as
-3FC cinit CODE >497:/home/surya/Desktop/automot/transmitter/build/main.as
-3FD cinit CODE >503:/home/surya/Desktop/automot/transmitter/build/main.as
-3FD cinit CODE >505:/home/surya/Desktop/automot/transmitter/build/main.as
-3FE cinit CODE >506:/home/surya/Desktop/automot/transmitter/build/main.as
-301 text7 CODE >62:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-301 text7 CODE >64:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-307 text7 CODE >64:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-309 text7 CODE >65:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-310 text7 CODE >67:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-314 text7 CODE >68:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-315 text7 CODE >68:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-31A text7 CODE >68:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-31C text7 CODE >66:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-321 text7 CODE >71:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-325 text7 CODE >72:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-328 text7 CODE >72:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-32C text7 CODE >72:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-32F text7 CODE >73:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-330 text7 CODE >73:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-335 text7 CODE >73:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-337 text7 CODE >70:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-337 text7 CODE >74:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-33C text7 CODE >75:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+3FD cinit CODE >481:/home/surya/Desktop/automot/transmitter/build/main.as
+3FD cinit CODE >484:/home/surya/Desktop/automot/transmitter/build/main.as
+3FD cinit CODE >490:/home/surya/Desktop/automot/transmitter/build/main.as
+3FD cinit CODE >492:/home/surya/Desktop/automot/transmitter/build/main.as
+3FE cinit CODE >493:/home/surya/Desktop/automot/transmitter/build/main.as
+303 text7 CODE >62:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+303 text7 CODE >64:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+309 text7 CODE >64:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+30B text7 CODE >65:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+312 text7 CODE >67:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+316 text7 CODE >68:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+317 text7 CODE >68:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+31C text7 CODE >68:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+31E text7 CODE >66:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+323 text7 CODE >71:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+327 text7 CODE >72:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+32A text7 CODE >72:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+32E text7 CODE >72:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+331 text7 CODE >73:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+332 text7 CODE >73:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+337 text7 CODE >73:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+339 text7 CODE >70:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+339 text7 CODE >74:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
 33E text7 CODE >75:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-340 text7 CODE >76:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-342 text7 CODE >77:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-343 text7 CODE >77:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-348 text7 CODE >77:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-34A text7 CODE >75:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-34C text7 CODE >79:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-34E text7 CODE >80:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-354 text7 CODE >81:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-356 text7 CODE >82:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-35B text7 CODE >82:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-360 text7 CODE >82:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-368 text7 CODE >83:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-36B text7 CODE >84:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-36C text7 CODE >86:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
-1F8 text6 CODE >32:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-1F8 text6 CODE >36:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-1F9 text6 CODE >37:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-1FB text6 CODE >38:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-1FE text6 CODE >38:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-200 text6 CODE >39:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-202 text6 CODE >41:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-212 text6 CODE >42:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
-266 text5 CODE >4:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-266 text5 CODE >6:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-268 text5 CODE >7:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-26C text5 CODE >7:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-271 text5 CODE >7:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-275 text5 CODE >8:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-277 text5 CODE >9:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-27B text5 CODE >9:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-280 text5 CODE >9:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-284 text5 CODE >10:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-286 text5 CODE >11:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-288 text5 CODE >12:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-28A text5 CODE >12:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-28E text5 CODE >12:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
-293 text4 CODE >35:/home/surya/Desktop/automot/transmitter/main.c
-293 text4 CODE >37:/home/surya/Desktop/automot/transmitter/main.c
-29A text4 CODE >37:/home/surya/Desktop/automot/transmitter/main.c
-2A3 text4 CODE >38:/home/surya/Desktop/automot/transmitter/main.c
-2AA text4 CODE >38:/home/surya/Desktop/automot/transmitter/main.c
-2C1 text4 CODE >39:/home/surya/Desktop/automot/transmitter/main.c
-23C text3 CODE >18:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-23D text3 CODE >19:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-23F text3 CODE >20:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-244 text3 CODE >22:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-24D text3 CODE >23:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-252 text3 CODE >25:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-256 text3 CODE >26:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-258 text3 CODE >27:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-25B text3 CODE >29:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-25F text3 CODE >31:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-261 text3 CODE >23:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-264 text3 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-265 text3 CODE >35:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
-213 text2 CODE >106:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-214 text2 CODE >108:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-216 text2 CODE >112:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-217 text2 CODE >114:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-21B text2 CODE >114:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-21E text2 CODE >114:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-224 text2 CODE >115:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-229 text2 CODE >116:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-22A text2 CODE >118:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-22E text2 CODE >122:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-230 text2 CODE >123:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-235 text2 CODE >125:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2C2 text1 CODE >19:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2C3 text1 CODE >25:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2CA text1 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2CB text1 CODE >35:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2CD text1 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2D3 text1 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2D5 text1 CODE >40:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2D6 text1 CODE >41:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2DD text1 CODE >42:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2DF text1 CODE >43:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2E4 text1 CODE >45:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2E7 text1 CODE >49:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2E9 text1 CODE >54:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2EA text1 CODE >60:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2EB text1 CODE >59:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2F0 text1 CODE >60:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2F7 text1 CODE >59:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2F8 text1 CODE >65:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2F9 text1 CODE >69:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-2FC text1 CODE >70:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-300 text1 CODE >90:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
-36D maintext CODE >42:/home/surya/Desktop/automot/transmitter/main.c
-36D maintext CODE >45:/home/surya/Desktop/automot/transmitter/main.c
-36F maintext CODE >48:/home/surya/Desktop/automot/transmitter/main.c
-371 maintext CODE >49:/home/surya/Desktop/automot/transmitter/main.c
-373 maintext CODE >50:/home/surya/Desktop/automot/transmitter/main.c
-376 maintext CODE >53:/home/surya/Desktop/automot/transmitter/main.c
-377 maintext CODE >55:/home/surya/Desktop/automot/transmitter/main.c
-379 maintext CODE >56:/home/surya/Desktop/automot/transmitter/main.c
-37A maintext CODE >57:/home/surya/Desktop/automot/transmitter/main.c
-37B maintext CODE >58:/home/surya/Desktop/automot/transmitter/main.c
-37C maintext CODE >63:/home/surya/Desktop/automot/transmitter/main.c
-395 maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
-397 maintext CODE >65:/home/surya/Desktop/automot/transmitter/main.c
-3A2 maintext CODE >65:/home/surya/Desktop/automot/transmitter/main.c
+340 text7 CODE >75:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+342 text7 CODE >76:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+344 text7 CODE >77:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+345 text7 CODE >77:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+34A text7 CODE >77:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+34C text7 CODE >75:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+34E text7 CODE >79:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+350 text7 CODE >80:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+356 text7 CODE >81:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+358 text7 CODE >82:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+35D text7 CODE >82:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+362 text7 CODE >82:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+36A text7 CODE >83:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+36D text7 CODE >84:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+36E text7 CODE >86:/opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+204 text6 CODE >32:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+204 text6 CODE >36:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+205 text6 CODE >37:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+207 text6 CODE >38:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+20A text6 CODE >38:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+20C text6 CODE >39:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+20E text6 CODE >41:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+21E text6 CODE >42:/opt/microchip/xc8/v2.46/pic/sources/c90/common/awtoft.c
+272 text5 CODE >4:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+272 text5 CODE >6:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+274 text5 CODE >7:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+278 text5 CODE >7:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+27D text5 CODE >7:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+281 text5 CODE >8:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+283 text5 CODE >9:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+287 text5 CODE >9:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+28C text5 CODE >9:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+290 text5 CODE >10:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+292 text5 CODE >11:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+294 text5 CODE >12:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+296 text5 CODE >12:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+29A text5 CODE >12:/opt/microchip/xc8/v2.46/pic/sources/c90/common/ftge.c
+29F text4 CODE >35:/home/surya/Desktop/automot/transmitter/main.c
+29F text4 CODE >37:/home/surya/Desktop/automot/transmitter/main.c
+2A6 text4 CODE >37:/home/surya/Desktop/automot/transmitter/main.c
+2AF text4 CODE >38:/home/surya/Desktop/automot/transmitter/main.c
+2B6 text4 CODE >38:/home/surya/Desktop/automot/transmitter/main.c
+2CD text4 CODE >39:/home/surya/Desktop/automot/transmitter/main.c
+248 text3 CODE >18:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+249 text3 CODE >19:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+24B text3 CODE >20:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+250 text3 CODE >22:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+259 text3 CODE >23:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+25E text3 CODE >25:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+262 text3 CODE >26:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+264 text3 CODE >27:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+267 text3 CODE >29:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+26B text3 CODE >31:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+26D text3 CODE >23:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+270 text3 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+271 text3 CODE >35:/home/surya/Desktop/automot/transmitter/lib/TinyRF.c
+21F text2 CODE >106:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+220 text2 CODE >108:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+222 text2 CODE >112:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+223 text2 CODE >114:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+227 text2 CODE >114:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+22A text2 CODE >114:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+230 text2 CODE >115:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+235 text2 CODE >116:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+236 text2 CODE >118:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+23A text2 CODE >122:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+23C text2 CODE >123:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+241 text2 CODE >125:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2CE text1 CODE >19:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2CF text1 CODE >27:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2D5 text1 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2D6 text1 CODE >35:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2D8 text1 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2DE text1 CODE >34:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2E0 text1 CODE >40:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2E1 text1 CODE >41:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2E8 text1 CODE >42:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2EA text1 CODE >43:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2EF text1 CODE >45:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2F2 text1 CODE >49:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2F3 text1 CODE >60:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2F4 text1 CODE >59:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+2F9 text1 CODE >60:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+300 text1 CODE >59:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+301 text1 CODE >65:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+302 text1 CODE >90:/home/surya/Desktop/automot/transmitter/lib/TinyRF_TX.c
+36F maintext CODE >42:/home/surya/Desktop/automot/transmitter/main.c
+36F maintext CODE >45:/home/surya/Desktop/automot/transmitter/main.c
+371 maintext CODE >48:/home/surya/Desktop/automot/transmitter/main.c
+373 maintext CODE >49:/home/surya/Desktop/automot/transmitter/main.c
+375 maintext CODE >50:/home/surya/Desktop/automot/transmitter/main.c
+378 maintext CODE >53:/home/surya/Desktop/automot/transmitter/main.c
+379 maintext CODE >55:/home/surya/Desktop/automot/transmitter/main.c
+37B maintext CODE >56:/home/surya/Desktop/automot/transmitter/main.c
+37C maintext CODE >57:/home/surya/Desktop/automot/transmitter/main.c
+37D maintext CODE >58:/home/surya/Desktop/automot/transmitter/main.c
+37E maintext CODE >63:/home/surya/Desktop/automot/transmitter/main.c
+397 maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
+399 maintext CODE >65:/home/surya/Desktop/automot/transmitter/main.c
 3A4 maintext CODE >65:/home/surya/Desktop/automot/transmitter/main.c
 3A6 maintext CODE >65:/home/surya/Desktop/automot/transmitter/main.c
-3B1 maintext CODE >66:/home/surya/Desktop/automot/transmitter/main.c
-3BC maintext CODE >66:/home/surya/Desktop/automot/transmitter/main.c
+3A8 maintext CODE >65:/home/surya/Desktop/automot/transmitter/main.c
+3B3 maintext CODE >66:/home/surya/Desktop/automot/transmitter/main.c
 3BE maintext CODE >66:/home/surya/Desktop/automot/transmitter/main.c
 3C0 maintext CODE >66:/home/surya/Desktop/automot/transmitter/main.c
-3CB maintext CODE >68:/home/surya/Desktop/automot/transmitter/main.c
-3D1 maintext CODE >69:/home/surya/Desktop/automot/transmitter/main.c
-3D2 maintext CODE >70:/home/surya/Desktop/automot/transmitter/main.c
-3DC maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
-3DF maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
-3E8 maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
-3EC maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
-3EE maintext CODE >72:/home/surya/Desktop/automot/transmitter/main.c
-3F1 maintext CODE >73:/home/surya/Desktop/automot/transmitter/main.c
-3F1 maintext CODE >75:/home/surya/Desktop/automot/transmitter/main.c
-3F2 maintext CODE >76:/home/surya/Desktop/automot/transmitter/main.c
-3F3 maintext CODE >78:/home/surya/Desktop/automot/transmitter/main.c
-3F6 maintext CODE >78:/home/surya/Desktop/automot/transmitter/main.c
+3C2 maintext CODE >66:/home/surya/Desktop/automot/transmitter/main.c
+3CD maintext CODE >68:/home/surya/Desktop/automot/transmitter/main.c
+3D3 maintext CODE >69:/home/surya/Desktop/automot/transmitter/main.c
+3D4 maintext CODE >70:/home/surya/Desktop/automot/transmitter/main.c
+3DE maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
+3E1 maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
+3EA maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
+3EE maintext CODE >64:/home/surya/Desktop/automot/transmitter/main.c
+3F0 maintext CODE >72:/home/surya/Desktop/automot/transmitter/main.c
+3F3 maintext CODE >73:/home/surya/Desktop/automot/transmitter/main.c
+3F3 maintext CODE >75:/home/surya/Desktop/automot/transmitter/main.c
+3F4 maintext CODE >76:/home/surya/Desktop/automot/transmitter/main.c
+3F5 maintext CODE >78:/home/surya/Desktop/automot/transmitter/main.c
+3F8 maintext CODE >78:/home/surya/Desktop/automot/transmitter/main.c
 $startup.obj
 0 end_init CODE >85:/home/surya/Desktop/automot/transmitter/build/startup.as
 1 end_init CODE >86:/home/surya/Desktop/automot/transmitter/build/startup.as
@@ -243,15 +237,15 @@ crc8@sum 23 0 BANK0 1 cstackBANK0 main.obj
 main@i 36 0 BANK0 1 cstackBANK0 main.obj
 __Hstrings 7FE 0 ABS 0 strings -
 ___sp 7FE 0 STACK 2 stack startup.obj
-_crc8 478 0 CODE 0 text3 main.obj
-_main 6DA 0 CODE 0 maintext main.obj
-_send 584 0 CODE 0 text1 main.obj
+_crc8 490 0 CODE 0 text3 main.obj
+_main 6DE 0 CODE 0 maintext main.obj
+_send 59C 0 CODE 0 text1 main.obj
 btemp 5E 0 ABS 0 - main.obj
 ___stack_hi 7FE 0 STACK 2 stack startup.obj
 ___stack_lo 7FE 0 STACK 2 stack startup.obj
 start 0 0 CODE 0 init startup.obj
 main@packet_cycle 38 0 BANK0 1 cstackBANK0 main.obj
-__end_of_transmitByte 478 0 CODE 0 text2 main.obj
+__end_of_transmitByte 490 0 CODE 0 text2 main.obj
 __Hpowerup 0 0 CODE 0 powerup -
 send@i 2C 0 BANK0 1 cstackBANK0 main.obj
 ___ftge@ff1 2C 0 BANK0 1 cstackBANK0 main.obj
@@ -266,25 +260,25 @@ wtemp0 5E 0 ABS 0 - main.obj
 __Hfunctab 0 0 ENTRY 0 functab -
 send@incrementSeq 29 0 BANK0 1 cstackBANK0 main.obj
 __Hclrtext 7FE 0 ABS 0 clrtext -
-__end_of___ftge 526 0 CODE 0 text5 main.obj
+__end_of___ftge 53E 0 CODE 0 text5 main.obj
 __Lmaintext 7FE 0 ABS 0 maintext -
 __end_of_START_PULSE_TRIGG_ERROR 46 0 STRING 0 strings main.obj
 __end_of_ONE_PULSE_TRIGG_ERROR 22 0 STRING 0 strings main.obj
 crc8@extract 24 0 BANK0 1 cstackBANK0 main.obj
 ___stackhi 0 0 ABS 0 - startup.obj
 ___stacklo 0 0 ABS 0 - startup.obj
-start_initialization 7F6 0 CODE 0 cinit main.obj
+start_initialization 7FA 0 CODE 0 cinit main.obj
 __end_of_NUM_PREAMBLE_BYTES 26 0 STRING 0 strings main.obj
-___awtoft 3F0 0 CODE 0 text6 main.obj
+___awtoft 408 0 CODE 0 text6 main.obj
 ?_modifyBit 20 0 BANK0 1 cstackBANK0 main.obj
-__end_of___awtoft 426 0 CODE 0 text6 main.obj
+__end_of___awtoft 43E 0 CODE 0 text6 main.obj
 __end_of_MIN_TX_INTERVAL_REAL 42 0 STRING 0 strings main.obj
 __pcstackBANK0 20 0 BANK0 1 cstackBANK0 main.obj
-___ftpack 602 0 CODE 0 text7 main.obj
+___ftpack 606 0 CODE 0 text7 main.obj
 ___ftpack@arg 20 0 BANK0 1 cstackBANK0 main.obj
 ___ftpack@exp 23 0 BANK0 1 cstackBANK0 main.obj
 ___int_sp 7FE 0 STACK 2 stack startup.obj
-__end_of___ftpack 6DA 0 CODE 0 text7 main.obj
+__end_of___ftpack 6DE 0 CODE 0 text7 main.obj
 __Hbank0 7FE 0 ABS 0 bank0 -
 __Hbank1 7FE 0 BANK1 1 bank1 -
 __Hcinit 7FE 0 CODE 0 cinit -
@@ -295,7 +289,7 @@ __Hcommon 7FE 0 ABS 0 common -
 __Hconfig 4010 0 CONFIG 4 config -
 __Lbank0 7FE 0 ABS 0 bank0 -
 __Lbank1 7FE 0 BANK1 1 bank1 -
-__Lcinit 7F6 0 CODE 0 cinit -
+__Lcinit 7FA 0 CODE 0 cinit -
 __Lstack 7FE 0 STACK 2 stack -
 crc8@tempI 25 0 BANK0 1 cstackBANK0 main.obj
 __end_of_PERIOD_HIGH_DURATION 4A 0 STRING 0 strings main.obj
@@ -315,7 +309,7 @@ __Lsfr0 7FE 0 ABS 0 sfr0 -
 __Lsfr1 7FE 0 ABS 0 sfr1 -
 __Lsivt 0 0 CODE 0 sivt -
 __Ltext 7FE 0 ABS 0 text -
-___ftge 4CC 0 CODE 0 text5 main.obj
+___ftge 4E4 0 CODE 0 text5 main.obj
 __LcstackBANK0 7FE 0 ABS 0 cstackBANK0 -
 __HcstackCOMMON 7FE 0 ABS 0 cstackCOMMON -
 transmitByte@_byte 21 0 BANK0 1 cstackBANK0 main.obj
@@ -327,9 +321,8 @@ _RC0 38 0 ABS 0 - main.obj
 _RC1 39 0 ABS 0 - main.obj
 _RC5 3D 0 ABS 0 - main.obj
 __S0 3FF 0 ABS 0 - -
-__S1 3C 0 ABS 0 - -
+__S1 3B 0 ABS 0 - -
 __S3 0 0 ABS 0 - -
-_seq 3B 0 BANK0 1 bssBANK0 main.obj
 __end_of_ZERO_PULSE_TRIGG_ERROR 1E 0 STRING 0 strings main.obj
 send@data 2D 0 BANK0 1 cstackBANK0 main.obj
 crc8@data 26 0 BANK0 1 cstackBANK0 main.obj
@@ -339,10 +332,9 @@ __Hosccal 7FE 0 CODE 0 osccal -
 __Lintentry 0 0 CODE 0 intentry -
 __stringtab A 0 STRING 0 strings main.obj
 reset_vec 0 0 CODE 0 reset_vec startup.obj
-__LbssBANK0 7FE 0 ABS 0 bssBANK0 -
 ?___awtoft 28 0 BANK0 1 cstackBANK0 main.obj
 __end_of_ONE_PULSE_PERIOD 36 0 STRING 0 strings main.obj
-__pmaintext 6DA 0 CODE 0 maintext main.obj
+__pmaintext 6DE 0 CODE 0 maintext main.obj
 __Lcommon 7FE 0 ABS 0 common -
 __Lconfig 0 0 CONFIG 4 config -
 ?___ftpack 20 0 BANK0 1 cstackBANK0 main.obj
@@ -367,20 +359,19 @@ __Hintentry 0 0 CODE 0 intentry -
 modifyBit@mask 2D 0 BANK0 1 cstackBANK0 main.obj
 __Losccal 7FE 0 CODE 0 osccal -
 __Lstrings 7FE 0 ABS 0 strings -
-__end_of_modifyBit 584 0 CODE 0 text4 main.obj
+__end_of_modifyBit 59C 0 CODE 0 text4 main.obj
 __end_of_TX_INTERVAL_CONST 2E 0 STRING 0 strings main.obj
 __Hreset_vec 0 0 CODE 0 reset_vec -
-__HbssBANK0 7FE 0 ABS 0 bssBANK0 -
-__ptext1 584 0 CODE 0 text1 main.obj
-__ptext2 426 0 CODE 0 text2 main.obj
-__ptext3 478 0 CODE 0 text3 main.obj
-__ptext4 526 0 CODE 0 text4 main.obj
-__ptext5 4CC 0 CODE 0 text5 main.obj
-__ptext6 3F0 0 CODE 0 text6 main.obj
-__ptext7 602 0 CODE 0 text7 main.obj
+__ptext1 59C 0 CODE 0 text1 main.obj
+__ptext2 43E 0 CODE 0 text2 main.obj
+__ptext3 490 0 CODE 0 text3 main.obj
+__ptext4 53E 0 CODE 0 text4 main.obj
+__ptext5 4E4 0 CODE 0 text5 main.obj
+__ptext6 408 0 CODE 0 text6 main.obj
+__ptext7 606 0 CODE 0 text7 main.obj
 __Lpowerup 0 0 CODE 0 powerup -
 __Leeprom_data 0 0 EEDATA 3 eeprom_data -
-_modifyBit 526 0 CODE 0 text4 main.obj
+_modifyBit 53E 0 CODE 0 text4 main.obj
 __H__absolute__ 0 0 ABS 0 __absolute__ -
 __Lreset_vec 0 0 CODE 0 reset_vec -
 ___heap_hi 0 0 ABS 0 - startup.obj
@@ -391,19 +382,18 @@ __Lclrtext 7FE 0 ABS 0 clrtext -
 ___ftpack@sign 24 0 BANK0 1 cstackBANK0 main.obj
 __pcstackCOMMON 0 0 COMMON 1 cstackCOMMON main.obj
 __Hend_init A 0 CODE 0 end_init -
-__end_of_crc8 4CC 0 CODE 0 text3 main.obj
-__end_of_main 7F6 0 CODE 0 maintext main.obj
-__end_of_send 602 0 CODE 0 text1 main.obj
+__end_of_crc8 4E4 0 CODE 0 text3 main.obj
+__end_of_main 7FA 0 CODE 0 maintext main.obj
+__end_of_send 606 0 CODE 0 text1 main.obj
 __end_of_START_PULSE_MAX_ERROR 1A 0 STRING 0 strings main.obj
 _ANSEL 91 0 ABS 0 - main.obj
 _TRISC 87 0 ABS 0 - main.obj
 __Hram 7FE 0 ABS 0 ram -
 __Lram 7FE 0 ABS 0 ram -
 transmitByte@i 22 0 BANK0 1 cstackBANK0 main.obj
-_transmitByte 426 0 CODE 0 text2 main.obj
-__initialization 7F6 0 CODE 0 cinit main.obj
+_transmitByte 43E 0 CODE 0 text2 main.obj
+__initialization 7FA 0 CODE 0 cinit main.obj
 __end_of_START_PULSE_PERIOD 3A 0 STRING 0 strings main.obj
-__pbssBANK0 3B 0 BANK0 1 bssBANK0 main.obj
 __pstrings A 0 STRING 0 strings main.obj
 ___int_stack_hi 7FE 0 STACK 2 stack startup.obj
 ___int_stack_lo 7FE 0 STACK 2 stack startup.obj
@@ -432,16 +422,16 @@ ___int_stack_lo 7FE 0 STACK 2 stack startup.obj
 # and size are in units of delta. The file address is in units of bytes.
 # All other numeric quantities are in decimal.
 %SEGMENTS
-cinit 0 3FB 7F6 4 2
-text1 0 2C2 584 3F 2
-text2 0 213 426 29 2
-text3 0 23C 478 2A 2
-text4 0 293 526 2F 2
-text5 0 266 4CC 2D 2
-text6 0 1F8 3F0 1B 2
-text7 0 301 602 6C 2
-maintext 0 36D 6DA 8E 2
-cstackBANK0 1 20 20 1C 1
+cinit 0 3FD 7FA 2 2
+text1 0 2CE 59C 35 2
+text2 0 21F 43E 29 2
+text3 0 248 490 2A 2
+text4 0 29F 53E 2F 2
+text5 0 272 4E4 2D 2
+text6 0 204 408 1B 2
+text7 0 303 606 6C 2
+maintext 0 36F 6DE 8E 2
+cstackBANK0 1 20 20 1B 1
 reset_vec 0 0 0 5 2
 strings 0 5 A 20 2
 # %NOTES Section

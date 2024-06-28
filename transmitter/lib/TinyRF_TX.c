@@ -24,7 +24,7 @@ void send(byte* data, uint8_t len, boolean incrementSeq){
 		#ifndef TRF_SEQ_DISABLED
 			byte errChck = TRF_ERR_CHK_FUNC(data, len, seq);
 		#else
-			byte errChck = TRF_ERR_CHK_FUNC(data, len);
+			byte errChck = TRF_ERR_CHK_FUNC(data, len,0);
 		#endif
 	#endif
 

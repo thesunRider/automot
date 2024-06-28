@@ -146,12 +146,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [i _TX_DELAY_MICROS
 * _MIN_TX_INTERVAL_REAL -> -> 2 `i `ui
 ]
-"4 ../lib/TinyRF_TX.c
-[v _seq `uc ~T0 @X0 1 e ]
-[i _seq
--> -> 0 `i `uc
-]
-"19
+"19 ../lib/TinyRF_TX.c
 [v _send `(v ~T0 @X0 1 ef3`*uc`uc`uc ]
 {
 [e :U _send ]
@@ -159,9 +154,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _len `uc ~T0 @X0 1 r2 ]
 [v _incrementSeq `uc ~T0 @X0 1 r3 ]
 [f ]
-"25
+"27
 [v _errChck `uc ~T0 @X0 1 a ]
-[e = _errChck ( _crc8 (3 , , _data _len _seq ]
+[e = _errChck ( _crc8 (3 , , _data _len -> -> 0 `i `uc ]
 "34
 {
 [v _i `uc ~T0 @X0 1 a ]
@@ -192,8 +187,6 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e ( _transmitByte (1 _len ]
 "49
 [e ( _transmitByte (1 _errChck ]
-"54
-[e ( _transmitByte (1 _seq ]
 "59
 [e $U 70  ]
 [e :U 71 ]
@@ -208,14 +201,6 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e :U 72 ]
 "65
 [e = _RC5 -> -> 0 `i `b ]
-"69
-[e $ ! != -> _incrementSeq `i -> -> -> 0 `i `uc `i 73  ]
-{
-"70
-[e ++ _seq -> -> 1 `i `uc ]
-"71
-}
-[e :U 73 ]
 "90
 [e :UE 66 ]
 }
@@ -231,8 +216,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 {
 [v _i `uc ~T0 @X0 1 a ]
 [e = _i -> -> 0 `i `uc ]
-[e $U 78  ]
-[e :U 75 ]
+[e $U 77  ]
+[e :U 74 ]
 {
 "94
 [e ( _send (3 , , _data _len -> -> 0 `i `uc ]
@@ -242,15 +227,13 @@ Version 3.2 HI-TECH Software Intermediate Code
 }
 "93
 [e ++ _i -> -> 1 `i `uc ]
-[e :U 78 ]
-[e $ < -> _i `i -> _times `i 75  ]
-[e :U 76 ]
+[e :U 77 ]
+[e $ < -> _i `i -> _times `i 74  ]
+[e :U 75 ]
 "99
 }
-"101
-[e ++ _seq -> -> 1 `i `uc ]
 "103
-[e :UE 74 ]
+[e :UE 73 ]
 }
 "106
 [v _transmitByte `(v ~T0 @X0 1 ef1`uc ]
@@ -262,34 +245,34 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _i `uc ~T0 @X0 1 a ]
 [e = _i -> -> 7 `i `uc ]
 "109
-[e :U 82 ]
+[e :U 81 ]
 {
 "112
 [e = _RC5 -> -> 0 `i `b ]
 "114
-[e $ ! != & -> __byte `i << -> 1 `i _i -> 0 `i 83  ]
+[e $ ! != & -> __byte `i << -> 1 `i _i -> 0 `i 82  ]
 {
 "115
 [e ( __delay (1 -> * -> - _ONE_PULSE_PERIOD _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "116
 }
-[e $U 84  ]
+[e $U 83  ]
 "117
-[e :U 83 ]
+[e :U 82 ]
 {
 "118
 [e ( __delay (1 -> * -> - _ZERO_PULSE_PERIOD _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "119
 }
-[e :U 84 ]
+[e :U 83 ]
 "122
 [e = _RC5 -> -> 1 `i `b ]
 "123
 [e ( __delay (1 -> * -> _PERIOD_HIGH_DURATION `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 "125
 }
-[e $ != -> -- _i -> -> 1 `i `uc `i -> -> -> 0 `i `uc `i 82  ]
-[e :U 81 ]
+[e $ != -> -- _i -> -> 1 `i `uc `i -> -> -> 0 `i `uc `i 81  ]
+[e :U 80 ]
 "126
-[e :UE 79 ]
+[e :UE 78 ]
 }

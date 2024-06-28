@@ -39,7 +39,7 @@
  * the sequence number will be checked to determine if any messages have been lost inbetween.
  * The sequence number resets at 255 so if there's more than 255 messages lost we won't find out.
 **/
-//#define TRF_SEQ_DISABLED
+#define TRF_SEQ_DISABLED
 
 
 /**

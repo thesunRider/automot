@@ -453,7 +453,6 @@ _PERIOD_HIGH_DURATION:
 
 	global __end_of_PERIOD_HIGH_DURATION
 __end_of_PERIOD_HIGH_DURATION:
-	global	_seq
 	global	_RC5
 _RC5	set	0x3D
 	global	_RC1
@@ -491,18 +490,6 @@ start_initialization:
 
 global __initialization
 __initialization:
-psect	bssBANK0,class=BANK0,space=1,noexec
-global __pbssBANK0
-__pbssBANK0:
-_seq:
-       ds      1
-
-	file	"main.as"
-	line	#
-; Clear objects allocated to BANK0
-psect cinit,class=CODE,delta=2,merge=1
-	bcf	status, 5	;RP0=0, select bank0
-	clrf	((__pbssBANK0)+0)&07Fh
 psect cinit,class=CODE,delta=2,merge=1
 global end_of_initialization,__end_of__initialization
 
@@ -617,14 +604,14 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;!    Strings     0
 ;!    Constant    26
 ;!    Data        0
-;!    BSS         1
+;!    BSS         0
 ;!    Persistent  0
 ;!    Stack       0
 ;!
 ;!Auto Spaces:
 ;!    Space          Size  Autos    Used
 ;!    COMMON            0      0       0
-;!    BANK0            62     27      28
+;!    BANK0            62     27      27
 
 ;!
 ;!Pointer List with Targets:
@@ -659,14 +646,14 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;! ---------------------------------------------------------------------------------
 ;! (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
 ;! ---------------------------------------------------------------------------------
-;! (0) _main                                                 9     9      0    3657
+;! (0) _main                                                 9     9      0    3635
 ;!                                             18 BANK0      9     9      0
 ;!                           ___awtoft
 ;!                             ___ftge
 ;!                          _modifyBit
 ;!                               _send
 ;! ---------------------------------------------------------------------------------
-;! (1) _send                                                 6     4      2     848
+;! (1) _send                                                 6     4      2     826
 ;!                                              8 BANK0      6     4      2
 ;!                               _crc8
 ;!                       _transmitByte
@@ -721,9 +708,9 @@ main@captured_byte:	; 1 bytes @ 0x1A
 ;!SFR1                 0      0       0       2        0.0%
 ;!STACK                0      0       0       2        0.0%
 ;!BITBANK0            3E      0       0       3        0.0%
-;!BANK0               3E     1B      1C       4       45.2%
-;!ABS                  0      0      1C       5        0.0%
-;!DATA                 0      0      1C       6        0.0%
+;!BANK0               3E     1B      1B       4       43.5%
+;!ABS                  0      0       0       5        0.0%
+;!DATA                 0      0       0       6        0.0%
 
 	global	_main
 
@@ -775,7 +762,7 @@ _main:
 ; Regs used in _main: [wreg-fsr0h+status,2+status,0+btemp+1+pclath+cstack]
 	line	45
 	
-l1035:	
+l1020:	
 	clrf	(main@packet_cycle)
 	clrf	(main@packet_cycle+1)
 	line	48
@@ -783,12 +770,12 @@ l1035:
 	clrf	(145)^080h	;volatile
 	line	49
 	
-l1037:	
+l1022:	
 	movlw	low(03h)
 	movwf	(135)^080h	;volatile
 	line	50
 	
-l1039:	
+l1024:	
 	movlw	low(0FFh)
 	bcf	status, 5	;RP0=0, select bank0
 	movwf	(main@captured_byte)
@@ -798,24 +785,24 @@ clrwdt ;#
 psect	maintext
 	line	55
 	
-l1041:	
+l1026:	
 	bsf	status, 5	;RP0=1, select bank1
 	bsf	(1035/8)^080h,(1035)&7	;volatile
 	line	56
 	
-l1043:	
+l1028:	
 	bsf	(1032/8)^080h,(1032)&7	;volatile
 	line	57
 	
-l1045:	
+l1030:	
 	bsf	(1033/8)^080h,(1033)&7	;volatile
 	line	58
 	
-l1047:	
+l1032:	
 	bsf	(1034/8)^080h,(1034)&7	;volatile
 	line	63
 	
-l1049:	
+l1034:	
 	bcf	status, 5	;RP0=0, select bank0
 	movf	(main@packet_cycle+1),w
 	movwf	(___awtoft@c+1)
@@ -836,29 +823,29 @@ l1049:
 	movwf	(___ftge@ff2+2)
 	fcall	___ftge
 	btfsc	status,0
-	goto	u581
-	goto	u580
-u581:
-	goto	l1053
-u580:
+	goto	u561
+	goto	u560
+u561:
+	goto	l1038
+u560:
 	
-l1051:	
+l1036:	
 	movf	((main@packet_cycle)),w
 iorwf	((main@packet_cycle+1)),w
 	btfss	status,2
-	goto	u591
-	goto	u590
-u591:
+	goto	u571
+	goto	u570
+u571:
 	goto	l57
-u590:
+u570:
 	line	64
 	
-l1053:	
+l1038:	
 	clrf	(main@i)
 	clrf	(main@i+1)
 	line	65
 	
-l1059:	
+l1044:	
 	bcf	status, 5	;RP0=0, select bank0
 	movf	(main@captured_byte),w
 	movwf	(??_main+0)+0
@@ -916,7 +903,7 @@ l1059:
 	movwf	(main@captured_byte)
 	line	68
 	
-l1061:	
+l1046:	
 	clrf	(send@len)
 	incf	(send@len),f
 	clrf	(send@incrementSeq)
@@ -929,7 +916,7 @@ clrwdt ;#
 psect	maintext
 	line	70
 	
-l1063:	
+l1048:	
 	asmopt push
 asmopt off
 movlw	7
@@ -937,17 +924,17 @@ movlw	7
 movwf	((??_main+0)+0+1)
 	movlw	95
 movwf	((??_main+0)+0)
-	u617:
+	u597:
 decfsz	((??_main+0)+0),f
-	goto	u617
+	goto	u597
 	decfsz	((??_main+0)+0+1),f
-	goto	u617
+	goto	u597
 	nop2
 asmopt pop
 
 	line	64
 	
-l1065:	
+l1050:	
 	movlw	01h
 	bcf	status, 5	;RP0=0, select bank0
 	addwf	(main@i),f
@@ -956,27 +943,27 @@ l1065:
 	movlw	0
 	addwf	(main@i+1),f
 	
-l1067:	
+l1052:	
 	movf	(main@i+1),w
 	xorlw	80h
 	movwf	btemp+1
 	movlw	(0)^80h
 	subwf	btemp+1,w
 	skipz
-	goto	u605
+	goto	u585
 	movlw	05h
 	subwf	(main@i),w
-u605:
+u585:
 
 	skipc
-	goto	u601
-	goto	u600
-u601:
-	goto	l1059
-u600:
+	goto	u581
+	goto	u580
+u581:
+	goto	l1044
+u580:
 	line	72
 	
-l1069:	
+l1054:	
 	bcf	status, 5	;RP0=0, select bank0
 	clrf	(main@packet_cycle)
 	clrf	(main@packet_cycle+1)
@@ -989,14 +976,14 @@ sleep ;#
 psect	maintext
 	line	76
 	
-l1071:	
+l1056:	
 	asmopt	push
 	asmopt	off
 	nop
 	asmopt	pop
 	line	78
 	
-l1073:	
+l1058:	
 	movlw	01h
 	bcf	status, 5	;RP0=0, select bank0
 	addwf	(main@packet_cycle),f
@@ -1004,7 +991,7 @@ l1073:
 	incf	(main@packet_cycle+1),f
 	movlw	0
 	addwf	(main@packet_cycle+1),f
-	goto	l1049
+	goto	l1034
 	global	start
 	ljmp	start
 	callstack 0
@@ -1064,64 +1051,63 @@ _send:
 	callstack 6
 ; Regs used in _send: [wreg-fsr0h+status,2+status,0+pclath+cstack]
 	movwf	(send@data)
-	line	25
+	line	27
 	
-l971:	
+l962:	
 	movf	(send@len),w
 	movwf	(crc8@len)
-	movf	(_seq),w
-	movwf	(crc8@seq)
+	clrf	(crc8@seq)
 	movf	(send@data),w
 	fcall	_crc8
 	movwf	(send@errChck)
 	line	34
 	
-l973:	
+l964:	
 	clrf	(send@i)
 	line	35
 	
-l979:	
+l970:	
 	movlw	low(0)
 	fcall	_transmitByte
 	line	34
 	
-l981:	
+l972:	
 	movlw	low(01h)
 	movwf	(??_send+0)+0
 	movf	(??_send+0)+0,w
 	addwf	(send@i),f
 	
-l983:	
+l974:	
 	movlw	low(04h)
 	subwf	(send@i),w
 	skipc
-	goto	u511
-	goto	u510
-u511:
-	goto	l979
-u510:
+	goto	u501
+	goto	u500
+u501:
+	goto	l970
+u500:
 	
-l104:	
+l102:	
 	line	40
 	bcf	(61/8),(61)&7	;volatile
 	line	41
 	
-l985:	
+l976:	
 	asmopt push
 asmopt off
 	movlw	214
 movwf	((??_send+0)+0)
-	u627:
+	u607:
 	nop2
 	nop2
 decfsz	(??_send+0)+0,f
-	goto	u627
+	goto	u607
 	nop
 asmopt pop
 
 	line	42
 	
-l987:	
+l978:	
 	bcf	status, 5	;RP0=0, select bank0
 	bsf	(61/8),(61)&7	;volatile
 	line	43
@@ -1129,33 +1115,28 @@ l987:
 asmopt off
 	movlw	165
 movwf	((??_send+0)+0)
-	u637:
+	u617:
 decfsz	(??_send+0)+0,f
-	goto	u637
+	goto	u617
 	nop2
 asmopt pop
 
 	line	45
 	
-l989:	
+l980:	
 	bcf	status, 5	;RP0=0, select bank0
 	movf	(send@len),w
 	fcall	_transmitByte
 	line	49
 	
-l991:	
+l982:	
 	movf	(send@errChck),w
 	fcall	_transmitByte
-	line	54
-	
-l993:	
-	movf	(_seq),w
-	fcall	_transmitByte
 	line	59
-	goto	l997
+	goto	l986
 	line	60
 	
-l995:	
+l984:	
 	movf	(send@len),w
 	addwf	(send@data),w
 	movwf	(??_send+0)+0
@@ -1166,40 +1147,23 @@ l995:
 	fcall	_transmitByte
 	line	59
 	
-l997:	
+l986:	
 	movlw	01h
 	subwf	(send@len),f
 		incf	(((send@len))),w
 	btfss	status,2
-	goto	u521
-	goto	u520
-u521:
-	goto	l995
-u520:
+	goto	u511
+	goto	u510
+u511:
+	goto	l984
+u510:
 	
-l107:	
+l105:	
 	line	65
 	bcf	(61/8),(61)&7	;volatile
-	line	69
-	
-l999:	
-	movf	((send@incrementSeq)),w
-	btfsc	status,2
-	goto	u531
-	goto	u530
-u531:
-	goto	l109
-u530:
-	line	70
-	
-l1001:	
-	movlw	low(01h)
-	movwf	(??_send+0)+0
-	movf	(??_send+0)+0,w
-	addwf	(_seq),f
 	line	90
 	
-l109:	
+l106:	
 	return
 	callstack 0
 GLOBAL	__end_of_send
@@ -1251,65 +1215,65 @@ _transmitByte:
 	movwf	(transmitByte@_byte)
 	line	108
 	
-l921:	
+l912:	
 	movlw	low(07h)
 	movwf	(transmitByte@i)
 	line	112
 	
-l923:	
+l914:	
 	bcf	(61/8),(61)&7	;volatile
 	line	114
 	
-l925:	
+l916:	
 	movlw	low(01h)
 	movwf	(??_transmitByte+0)+0
 	incf	(transmitByte@i),w
-	goto	u344
-u345:
+	goto	u334
+u335:
 	clrc
 	rlf	(??_transmitByte+0)+0,f
-u344:
+u334:
 	addlw	-1
 	skipz
-	goto	u345
+	goto	u335
 	movf	0+(??_transmitByte+0)+0,w
 	andwf	(transmitByte@_byte),w
 	btfsc	status,2
-	goto	u351
-	goto	u350
-u351:
-	goto	l929
-u350:
+	goto	u341
+	goto	u340
+u341:
+	goto	l920
+u340:
 	line	115
 	
-l927:	
+l918:	
 	asmopt push
 asmopt off
 	movlw	167
 movwf	((??_transmitByte+0)+0)
-	u647:
+	u627:
 decfsz	(??_transmitByte+0)+0,f
-	goto	u647
+	goto	u627
 	nop
 asmopt pop
 
 	line	116
-	goto	l931
+	goto	l922
 	line	118
 	
-l929:	
+l920:	
 	asmopt push
 asmopt off
 	movlw	84
 movwf	((??_transmitByte+0)+0)
-	u657:
+	u637:
 decfsz	(??_transmitByte+0)+0,f
-	goto	u657
+	goto	u637
 asmopt pop
 
 	line	122
 	
-l931:	
+l922:	
 	bcf	status, 5	;RP0=0, select bank0
 	bsf	(61/8),(61)&7	;volatile
 	line	123
@@ -1317,28 +1281,28 @@ l931:
 asmopt off
 	movlw	165
 movwf	((??_transmitByte+0)+0)
-	u667:
+	u647:
 decfsz	(??_transmitByte+0)+0,f
-	goto	u667
+	goto	u647
 	nop2
 asmopt pop
 
 	line	125
 	
-l933:	
+l924:	
 	movlw	01h
 	bcf	status, 5	;RP0=0, select bank0
 	subwf	(transmitByte@i),f
 		incf	(((transmitByte@i))),w
 	btfss	status,2
-	goto	u361
-	goto	u360
-u361:
-	goto	l923
-u360:
+	goto	u351
+	goto	u350
+u351:
+	goto	l914
+u350:
 	line	126
 	
-l122:	
+l119:	
 	return
 	callstack 0
 GLOBAL	__end_of_transmitByte
@@ -1398,100 +1362,100 @@ _crc8:
 	movwf	(crc8@data)
 	line	19
 	
-l893:	
+l884:	
 	movf	(crc8@seq),w
 	movwf	(crc8@crc)
 	line	20
-	goto	l915
+	goto	l906
 	line	22
 	
-l895:	
+l886:	
 	movf	(crc8@data),w
 	movwf	fsr0
 	bcf	status, 7	;select IRP bank0
 	movf	indf,w
 	movwf	(crc8@extract)
 	
-l897:	
+l888:	
 	movlw	low(01h)
 	movwf	(??_crc8+0)+0
 	movf	(??_crc8+0)+0,w
 	addwf	(crc8@data),f
 	line	23
 	
-l899:	
+l890:	
 	movlw	low(08h)
 	movwf	(crc8@tempI)
-	goto	l913
+	goto	l904
 	line	25
 	
-l901:	
+l892:	
 	movf	(crc8@crc),w
 	xorwf	(crc8@extract),w
 	andlw	01h
 	movwf	(crc8@sum)
 	line	26
 	
-l903:	
+l894:	
 	clrc
 	rrf	(crc8@crc),f
 
 	line	27
 	
-l905:	
+l896:	
 	movf	((crc8@sum)),w
 	btfsc	status,2
-	goto	u311
-	goto	u310
-u311:
-	goto	l909
-u310:
+	goto	u301
+	goto	u300
+u301:
+	goto	l900
+u300:
 	line	29
 	
-l907:	
+l898:	
 	movlw	low(08Ch)
 	movwf	(??_crc8+0)+0
 	movf	(??_crc8+0)+0,w
 	xorwf	(crc8@crc),f
 	line	31
 	
-l909:	
+l900:	
 	clrc
 	rrf	(crc8@extract),f
 
 	line	23
 	
-l911:	
+l902:	
 	movlw	01h
 	subwf	(crc8@tempI),f
 	
-l913:	
+l904:	
 	movf	((crc8@tempI)),w
 	btfss	status,2
-	goto	u321
-	goto	u320
-u321:
-	goto	l901
-u320:
+	goto	u311
+	goto	u310
+u311:
+	goto	l892
+u310:
 	line	20
 	
-l915:	
+l906:	
 	movlw	01h
 	subwf	(crc8@len),f
 		incf	(((crc8@len))),w
 	btfss	status,2
-	goto	u331
-	goto	u330
-u331:
-	goto	l895
-u330:
+	goto	u321
+	goto	u320
+u321:
+	goto	l886
+u320:
 	line	34
 	
-l917:	
+l908:	
 	movf	(crc8@crc),w
 	line	35
 	
-l164:	
+l161:	
 	return
 	callstack 0
 GLOBAL	__end_of_crc8
@@ -1544,21 +1508,21 @@ _modifyBit:
 ; Regs used in _modifyBit: [wreg+status,2+status,0]
 	line	37
 	
-l967:	
+l958:	
 	incf	(modifyBit@p),w
 	movwf	(??_modifyBit+0)+0
 	movlw	01h
 	movwf	(??_modifyBit+1)+0
 	movlw	0
 	movwf	(??_modifyBit+1)+0+1
-	goto	u494
-u495:
+	goto	u484
+u485:
 	clrc
 	rlf	(??_modifyBit+1)+0,f
 	rlf	(??_modifyBit+1)+1,f
-u494:
+u484:
 	decfsz	(??_modifyBit+0)+0,f
-	goto	u495
+	goto	u485
 	
 	movf	0+(??_modifyBit+1)+0,w
 	movwf	(modifyBit@mask)
@@ -1571,14 +1535,14 @@ u494:
 	movwf	(??_modifyBit+1)+0+1
 	movf	(modifyBit@b),w
 	movwf	(??_modifyBit+1)+0
-	goto	u504
-u505:
+	goto	u494
+u495:
 	clrc
 	rlf	(??_modifyBit+1)+0,f
 	rlf	(??_modifyBit+1)+1,f
-u504:
+u494:
 	decfsz	(??_modifyBit+0)+0,f
-	goto	u505
+	goto	u495
 	
 	movf	(modifyBit@mask+1),w
 	movwf	(??_modifyBit+3)+0+1
@@ -1652,16 +1616,16 @@ ___ftge:
 ; Regs used in ___ftge: [wreg+status,2+status,0]
 	line	6
 	
-l1015:	
+l1000:	
 	btfss	(___ftge@ff1+2),(23)&7
-	goto	u551
-	goto	u550
-u551:
-	goto	l1019
-u550:
+	goto	u531
+	goto	u530
+u531:
+	goto	l1004
+u530:
 	line	7
 	
-l1017:	
+l1002:	
 	movf	(___ftge@ff1),w
 	sublw	0
 	movwf	(___ftge@ff1)
@@ -1678,16 +1642,16 @@ l1017:
 	movwf	2+(___ftge@ff1)
 	line	8
 	
-l1019:	
+l1004:	
 	btfss	(___ftge@ff2+2),(23)&7
-	goto	u561
-	goto	u560
-u561:
-	goto	l1023
-u560:
+	goto	u541
+	goto	u540
+u541:
+	goto	l1008
+u540:
 	line	9
 	
-l1021:	
+l1006:	
 	movf	(___ftge@ff2),w
 	sublw	0
 	movwf	(___ftge@ff2)
@@ -1704,46 +1668,46 @@ l1021:
 	movwf	2+(___ftge@ff2)
 	line	10
 	
-l1023:	
+l1008:	
 	movlw	080h
 	xorwf	(___ftge@ff1+2),f
 	line	11
 	
-l1025:	
+l1010:	
 	movlw	080h
 	xorwf	(___ftge@ff2+2),f
 	line	12
 	
-l1027:	
+l1012:	
 	movf	(___ftge@ff2+2),w
 	subwf	(___ftge@ff1+2),w
 	skipz
-	goto	u575
+	goto	u555
 	movf	(___ftge@ff2+1),w
 	subwf	(___ftge@ff1+1),w
 	skipz
-	goto	u575
+	goto	u555
 	movf	(___ftge@ff2),w
 	subwf	(___ftge@ff1),w
-u575:
+u555:
 	skipnc
-	goto	u571
-	goto	u570
-u571:
-	goto	l1031
-u570:
+	goto	u551
+	goto	u550
+u551:
+	goto	l1016
+u550:
 	
-l1029:	
+l1014:	
 	clrc
 	
-	goto	l519
+	goto	l516
 	
-l1031:	
+l1016:	
 	setc
 	
 	line	13
 	
-l519:	
+l516:	
 	return
 	callstack 0
 GLOBAL	__end_of___ftge
@@ -1795,20 +1759,20 @@ ___awtoft:
 ; Regs used in ___awtoft: [wreg+status,2+status,0+pclath+cstack]
 	line	36
 	
-l1003:	
+l988:	
 	clrf	(___awtoft@sign)
 	line	37
 	
-l1005:	
+l990:	
 	btfss	(___awtoft@c+1),7
-	goto	u541
-	goto	u540
-u541:
-	goto	l1011
-u540:
+	goto	u521
+	goto	u520
+u521:
+	goto	l996
+u520:
 	line	38
 	
-l1007:	
+l992:	
 	comf	(___awtoft@c),f
 	comf	(___awtoft@c+1),f
 	incf	(___awtoft@c),f
@@ -1816,12 +1780,12 @@ l1007:
 	incf	(___awtoft@c+1),f
 	line	39
 	
-l1009:	
+l994:	
 	clrf	(___awtoft@sign)
 	incf	(___awtoft@sign),f
 	line	41
 	
-l1011:	
+l996:	
 	movf	(___awtoft@c),w
 	movwf	(___ftpack@arg)
 	movf	(___awtoft@c+1),w
@@ -1840,7 +1804,7 @@ l1011:
 	movwf	(?___awtoft+2)
 	line	42
 	
-l452:	
+l449:	
 	return
 	callstack 0
 GLOBAL	__end_of___awtoft
@@ -1893,75 +1857,75 @@ ___ftpack:
 ; Regs used in ___ftpack: [wreg+status,2+status,0]
 	line	64
 	
-l935:	
+l926:	
 	movf	((___ftpack@exp)),w
 	btfsc	status,2
-	goto	u371
-	goto	u370
-u371:
-	goto	l939
-u370:
+	goto	u361
+	goto	u360
+u361:
+	goto	l930
+u360:
 	
-l937:	
+l928:	
 	movf	(___ftpack@arg+2),w
 	iorwf	(___ftpack@arg+1),w
 	iorwf	(___ftpack@arg),w
 	skipz
-	goto	u381
-	goto	u380
-u381:
-	goto	l945
-u380:
+	goto	u371
+	goto	u370
+u371:
+	goto	l936
+u370:
 	line	65
 	
-l939:	
+l930:	
 	movlw	0x0
 	movwf	(?___ftpack)
 	movlw	0x0
 	movwf	(?___ftpack+1)
 	movlw	0x0
 	movwf	(?___ftpack+2)
-	goto	l458
+	goto	l455
 	line	67
 	
-l943:	
+l934:	
 	movlw	low(01h)
 	movwf	(??___ftpack+0)+0
 	movf	(??___ftpack+0)+0,w
 	addwf	(___ftpack@exp),f
 	line	68
 	movlw	01h
-u395:
+u385:
 	clrc
 	rrf	(___ftpack@arg+2),f
 	rrf	(___ftpack@arg+1),f
 	rrf	(___ftpack@arg),f
 	addlw	-1
 	skipz
-	goto	u395
+	goto	u385
 
 	line	66
 	
-l945:	
+l936:	
 	movlw	low highword(0FE0000h)
 	andwf	(___ftpack@arg+2),w
 	btfss	status,2
-	goto	u401
-	goto	u400
-u401:
-	goto	l943
-u400:
-	goto	l462
+	goto	u391
+	goto	u390
+u391:
+	goto	l934
+u390:
+	goto	l459
 	line	71
 	
-l947:	
+l938:	
 	movlw	low(01h)
 	movwf	(??___ftpack+0)+0
 	movf	(??___ftpack+0)+0,w
 	addwf	(___ftpack@exp),f
 	line	72
 	
-l949:	
+l940:	
 	movlw	01h
 	addwf	(___ftpack@arg),f
 	movlw	0
@@ -1974,76 +1938,76 @@ movlw 1
 	addwf	(___ftpack@arg+2),f
 	line	73
 	
-l951:	
+l942:	
 	movlw	01h
-u415:
+u405:
 	clrc
 	rrf	(___ftpack@arg+2),f
 	rrf	(___ftpack@arg+1),f
 	rrf	(___ftpack@arg),f
 	addlw	-1
 	skipz
-	goto	u415
+	goto	u405
 
 	line	74
 	
-l462:	
+l459:	
 	line	70
 	movlw	low highword(0FF0000h)
 	andwf	(___ftpack@arg+2),w
 	btfss	status,2
-	goto	u421
-	goto	u420
-u421:
-	goto	l947
-u420:
-	goto	l955
+	goto	u411
+	goto	u410
+u411:
+	goto	l938
+u410:
+	goto	l946
 	line	76
 	
-l953:	
+l944:	
 	movlw	01h
 	subwf	(___ftpack@exp),f
 	line	77
 	movlw	01h
-u435:
+u425:
 	clrc
 	rlf	(___ftpack@arg),f
 	rlf	(___ftpack@arg+1),f
 	rlf	(___ftpack@arg+2),f
 	addlw	-1
 	skipz
-	goto	u435
+	goto	u425
 	line	75
 	
-l955:	
+l946:	
 	btfsc	(___ftpack@arg+1),(15)&7
-	goto	u441
-	goto	u440
-u441:
-	goto	l469
-u440:
+	goto	u431
+	goto	u430
+u431:
+	goto	l466
+u430:
 	
-l957:	
+l948:	
 	movlw	low(02h)
 	subwf	(___ftpack@exp),w
 	skipnc
+	goto	u441
+	goto	u440
+u441:
+	goto	l944
+u440:
+	
+l466:	
+	line	79
+	btfsc	(___ftpack@exp),(0)&7
 	goto	u451
 	goto	u450
 u451:
-	goto	l953
+	goto	l467
 u450:
-	
-l469:	
-	line	79
-	btfsc	(___ftpack@exp),(0)&7
-	goto	u461
-	goto	u460
-u461:
-	goto	l470
-u460:
 	line	80
 	
-l959:	
+l950:	
 	movlw	0FFh
 	andwf	(___ftpack@arg),f
 	movlw	07Fh
@@ -2051,28 +2015,28 @@ l959:
 	movlw	0FFh
 	andwf	(___ftpack@arg+2),f
 	
-l470:	
+l467:	
 	line	81
 	clrc
 	rrf	(___ftpack@exp),f
 
 	line	82
 	
-l961:	
+l952:	
 	movf	(___ftpack@exp),w
 	movwf	((??___ftpack+0)+0)
 	clrf	((??___ftpack+0)+0+1)
 	clrf	((??___ftpack+0)+0+2)
 	movlw	010h
-u475:
+u465:
 	clrc
 	rlf	(??___ftpack+0)+0,f
 	rlf	(??___ftpack+0)+1,f
 	rlf	(??___ftpack+0)+2,f
-u470:
+u460:
 	addlw	-1
 	skipz
-	goto	u475
+	goto	u465
 	movf	0+(??___ftpack+0)+0,w
 	iorwf	(___ftpack@arg),f
 	movf	1+(??___ftpack+0)+0,w
@@ -2081,24 +2045,24 @@ u470:
 	iorwf	(___ftpack@arg+2),f
 	line	83
 	
-l963:	
+l954:	
 	movf	((___ftpack@sign)),w
 	btfsc	status,2
-	goto	u481
-	goto	u480
-u481:
-	goto	l471
-u480:
+	goto	u471
+	goto	u470
+u471:
+	goto	l468
+u470:
 	line	84
 	
-l965:	
+l956:	
 	bsf	(___ftpack@arg)+(23/8),(23)&7
 	
-l471:	
+l468:	
 	line	85
 	line	86
 	
-l458:	
+l455:	
 	return
 	callstack 0
 GLOBAL	__end_of___ftpack

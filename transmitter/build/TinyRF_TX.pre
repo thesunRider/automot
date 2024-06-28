@@ -1122,14 +1122,11 @@ void sendMulti(byte data[], uint8_t len, uint8_t times);
 
 void transmitByte(byte _byte);
 
-# 4 "../lib/TinyRF_TX.c"
-uint8_t seq = 0;
-
-# 19
+# 19 "../lib/TinyRF_TX.c"
 void send(byte* data, uint8_t len, boolean incrementSeq){
 
-# 25
-byte errChck = crc8(data, len, seq);
+# 27
+byte errChck = crc8(data, len,0);
 
 # 34
 for(uint8_t i=0; i<NUM_PREAMBLE_BYTES; i++){
@@ -1149,14 +1146,7 @@ transmitByte(len);
 
 transmitByte(errChck);
 
-
-
-
-transmitByte(seq);
-
-
-
-
+# 59
 while(len--){
 transmitByte(data[len]);
 }
@@ -1164,12 +1154,6 @@ transmitByte(data[len]);
 
 
 RC5 = 0;
-
-
-
-if(incrementSeq){
-seq++;
-}
 
 # 90
 }
@@ -1183,8 +1167,7 @@ send(data, len, 0);
 _delay((unsigned long)((MIN_TX_INTERVAL_REAL + TX_INTERVAL_CONST)*(4000000/4000000.0)));
 }
 
-seq++;
-
+# 103
 }
 
 
