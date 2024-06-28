@@ -1,5 +1,7 @@
 Version 3.2 HI-TECH Software Intermediate Code
 [p mainexit ]
+"781 /opt/microchip/xc8/v2.46/pic/include/proc/pic16f676.h
+[v _TRISC `Vuc ~T0 @X0 0 e@135 ]
 [v F38 `(v ~T0 @X0 1 tf1`ul ]
 "20 /opt/microchip/xc8/v2.46/pic/include/builtins.h
 [v __delay `JF38 ~T0 @X0 0 e ]
@@ -76,34 +78,32 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; <" ADRESL equ 09Eh ;# ">
 "1380
 [; <" ADCON1 equ 09Fh ;# ">
-"9 test.c
+"26 ../test.c
+[p x FOSC=INTRCIO ]
 [p x MCLRE=OFF ]
+[p x WDTE=ON ]
 [p x BOREN=OFF ]
 [v $root$_main `(v ~T0 @X0 0 e ]
-"11
+"28
 [v _main `(i ~T0 @X0 1 ef ]
-"12
+"29
 {
 [e :U _main ]
 [f ]
-"14
-[v _TRISD `i ~T0 @X0 1 s ]
-[e = _TRISD -> 254 `i ]
-"17
+"31
+[e = _TRISC -> -> 35 `i `uc ]
+"34
 [e :U 68 ]
-"18
+"35
 {
-"19
-[v _LATDbits `i ~T0 @X0 1 s ]
-[e = _LATDbits - -> 1 `i _LATDbits ]
-"20
+"37
 [e ( __delay (1 -> -> 100000 `l `ul ]
-"21
+"38
 }
 [e :U 67 ]
-"17
+"34
 [e $U 68  ]
 [e :U 69 ]
-"22
+"39
 [e :UE 66 ]
 }

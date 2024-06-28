@@ -1,0 +1,22 @@
+[p GLOBOPT AUTOSTATIC PIC14 PICREGULAR PICMID ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 16F676 ]
+[d frameptr 0 ]
+"28 /home/surya/Desktop/automot/transmitter/test.c
+[v _main main `(i  1 e 2 0 ]
+"62 /opt/microchip/xc8/v2.46/pic/sources/c90/common/float.c
+[v ___ftpack __ftpack `(f  1 e 3 0 ]
+"86 /opt/microchip/xc8/v2.46/pic/sources/c90/common/ftadd.c
+[v ___ftadd __ftadd `(f  1 e 3 0 ]
+"6 /opt/microchip/xc8/v2.46/pic/sources/c90/pic/__eeprom.c
+[v ___eecpymem __eecpymem `(v  1 e 1 0 ]
+"39
+[v ___memcpyee __memcpyee `(v  1 e 1 0 ]
+"781 /opt/microchip/xc8/v2.46/pic/include/proc/pic16f676.h
+[v _TRISC TRISC `VEuc  1 e 1 @135 ]
+"28 /home/surya/Desktop/automot/transmitter/test.c
+[v _main main `(i  1 e 2 0 ]
+{
+"39
+} 0

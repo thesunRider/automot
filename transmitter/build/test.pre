@@ -1,5 +1,5 @@
 
-# 1 "test.c"
+# 1 "../test.c"
 
 # 18 "/opt/microchip/xc8/v2.46/pic/include/xc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -1083,18 +1083,18 @@ extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
 
-# 9 "test.c"
-#pragma config OSC=INTIO67,MCLRE=OFF,WDT=OFF,LVP=OFF,BOREN=OFF
+# 26 "../test.c"
+#pragma config FOSC=INTRCIO,MCLRE=OFF,WDTE=ON,BOREN=OFF
 
 int main(void)
 {
 
-TRISD = 0b11111110;
+TRISC = 0b00100011;
 
 
 while(1)
 {
-LATDbits.LATD0 = 1 - LATDbits.LATD0;
+
 _delay(100000);
 }
 }

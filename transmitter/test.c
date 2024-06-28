@@ -1,22 +1,39 @@
 //
-// LED blink example for PIC18F4520
-// Written by Ted Burke
-// Last updated 5-3-2013
+// LED blink example for PIC16F676
+// Written by Suryasaradhi
+// Last updated 28-6-2024
 //
  
 #include <xc.h>
- 
-#pragma config OSC=INTIO67,MCLRE=OFF,WDT=OFF,LVP=OFF,BOREN=OFF
+
+/*pinout
+--Power--
+Red - +5
+Blk - GND
+
+--Probes--
+BLCK - +5
+BRWN - Bottom - rc0
+RED -  TOP   - rc1
+
+--RFIN--
+RFIN - RC5
+
+
+*/
+
+//intosc with watchdog timer
+#pragma config FOSC=INTRCIO,MCLRE=OFF,WDTE=ON,BOREN=OFF
  
 int main(void)
 {
     // Make RD0 a digital output
-    TRISD = 0b11111110;
+    TRISC = 0b00100011;
      
     // Blink LED on RD0 (pin 19)
     while(1)
     {
-        LATDbits.LATD0 = 1 - LATDbits.LATD0;
+        //LATDbits.LATD0 = 1 - LATDbits.LATD0;
         _delay(100000);
     }
 }
